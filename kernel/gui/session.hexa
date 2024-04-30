@@ -110,7 +110,7 @@ class GraphicalSession {
 			haveToQuake = true
 		} else if file == "*:files" {
 			new Files("desktop" + '\r')
-		} else if file.endsWith(".ico") or file.endsWith(".png") or file.endsWith(".bmp") {
+		} else if file.endsWith(".ico") or file.endsWith(".png") or file.endsWith(".bmp") or file.endsWith(".jpg") {
 			new Viewer(file, displayName)
 		} else {
 			alert(

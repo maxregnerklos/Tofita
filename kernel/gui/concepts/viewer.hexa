@@ -45,6 +45,10 @@ class Viewer {
 				picture = loadPng32(asset)
 			}
 
+			if file.endsWith(".jpg") {
+				picture = loadJpeg32(asset)
+			}
+
 			if file.endsWith(".bmp") {
 				picture = loadBitMap24(asset)
 			}

@@ -1,3 +1,103 @@
+// The Tofita Engine
+// Copyright (C) 2022-2024 Oleh Petrenko
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+@customHeader(`
+// Used only for STB
+
+#define free libc_free
+//#define malloc libc_malloc
+#define realloc libc_realloc
+#define memset libc_memset
+#define abs libc_abs
+#define pow libc_pow
+
+uint64_t PhysicalAllocator_$allocateBytes_(uint64_t);
+
+function libc_free(void *addr) {
+	// Do nothing for now
+}
+
+void *libc_malloc(uint64_t size) {
+	// serialPrintf(L"[libc] libc_malloc of size %u\n", size);
+	return (void *)(PhysicalAllocator_$allocateBytes_(size));
+}
+
+function libc_memcpy(void *dest, const void *src, uint64_t n) {
+	const uint8_t *csrc = (uint8_t *)src;
+	uint8_t *cdest = (uint8_t *)dest;
+	for (int32_t i = 0; i < n; i++)
+		cdest[i] = csrc[i];
+}
+
+void *libc_realloc(void *addr, uint64_t size) {
+	{
+		uint64_t result = PhysicalAllocator_$allocateBytes_(size);
+		if (addr) {
+			libc_memcpy((void *)result, addr, size);
+		}
+		// TODO free
+		return (void *)result;
+	}
+}
+
+void *libc_memset(void *b, int32_t c, int32_t len) {
+	int32_t i;
+	uint8_t *p = (uint8_t *)b;
+	i = 0;
+	while (len > 0) {
+		*p = c;
+		p++;
+		len--;
+	}
+	return (b);
+}
+
+int32_t libc_abs(int32_t v) {
+	return v * ((v < 0) * (-1) + (v > 0));
+}
+
+int32_t libc_pow(int32_t a, int32_t n) {
+	int32_t r = 1;
+	while (n > 0) {
+		if (n & 1)
+			r *= a;
+		a *= a;
+		n >>= 1;
+	}
+	return r;
+}
+
+function memcpy(void *dest, const void *src, uint64_t n) {
+	libc_memcpy(dest, src, n);
+}
+
+// STB library
+//
+#define STBI_NO_SIMD
+#define STBI_NO_STDIO
+#define STB_IMAGE_IMPLEMENTATION
+//#define STBI_ONLY_PNG
+//#define STBI_NO_JPEG
+//#define STBI_NO_PNG
+#define STBI_NO_BMP
+#define STBI_NO_PSD
+#define STBI_NO_TGA
+#define STBI_NO_GIF
+#define STBI_NO_HDR
+#define STBI_NO_PIC
+#define STBI_NO_PNM
+
 /* stb_image - v2.19 - public domain image loader - http://nothings.org/stb
 								  no warranty implied; use at your own risk
 
@@ -3175,6 +3275,7 @@ static int32_t stbi__free_jpeg_components(stbi__jpeg *z, int32_t ncomp, int32_t 
 
 static int32_t stbi__process_frame_header(stbi__jpeg *z, int32_t scan) {
 	stbi__context *s = z->s;
+	int32_t Lf, p, i, q, h_max = 1, v_max = 1, c;
 	Lf = stbi__get16be(s);
 	if (Lf < 11)
 		return stbi__err(u8"bad SOF len", u8"Corrupt JPEG"); // JPEG
@@ -3191,7 +3292,6 @@ static int32_t stbi__process_frame_header(stbi__jpeg *z, int32_t scan) {
 	s->img_x = stbi__get16be(s);
 	if (s->img_x == 0)
 		return stbi__err(u8"0 width", u8"Corrupt JPEG"); // JPEG requires
-	int32_t Lf, p, i, q, h_max = 1, v_max = 1, c;
 	c = stbi__get8(s);
 	if (c != 3 && c != 1 && c != 4)
 		return stbi__err(u8"bad component count", u8"Corrupt JPEG");
@@ -6573,9 +6673,9 @@ static void *stbi__pic_load(stbi__context *s, int32_t *px, int32_t *py, int32_t 
 	if (!stbi__mad3sizes_valid(x, y, 4, 0))
 		return stbi__errpuc(u8"too large", "PIC image too large to decode");
 
-	stbi__get32be(s); // skip `ratio'
-	stbi__get16be(s); // skip `fields'
-	stbi__get16be(s); // skip `pad'
+	stbi__get32be(s); // skip 'ratio'
+	stbi__get16be(s); // skip 'fields'
+	stbi__get16be(s); // skip 'pad'
 
 	// intermediate buffer is RGBA
 	result = (stbi_uc *)stbi__malloc_mad3(x, y, 4, 0);
@@ -7973,3 +8073,70 @@ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------
 */
+
+#undef free
+#undef realloc
+#undef memset
+#undef abs
+#undef pow
+#undef memcpy
+`)
+@rename('stbi_load_from_memory')
+@deep
+@noGenerate
+declare fun stbi_load_from_memory(
+	data ArrayPointer<UInt8>,
+	size UInt32,
+	width ArrayPointer<Int32>,
+	height ArrayPointer<Int32>,
+	bpp ArrayPointer<Int32>,
+	bytes Int32
+) ArrayPointer<UInt8>
+
+fun loadStbi32FromBuffer(data ArrayPointer<UInt8>, size UInt32) Bitmap32 {
+	// TODO better idea, like `ArrayByValue` or just `ByValue`?
+	var width ArrayByValue<Int32, 1> = [0]
+	var height ArrayByValue<Int32, 1> = [0]
+	var bpp ArrayByValue<Int32, 1> = [0]
+
+	var colors ArrayPointer<UInt8> = stbi_load_from_memory(
+		data,
+		size,
+		width.ref,
+		height.ref,
+		bpp.ref,
+		4
+	)
+
+	let width = width[0]
+	let height = height[0]
+	let bpp = bpp[0]
+	// TODO validate bpp
+
+	serialPrintln("<Tofita> loadStbi32FromBuffer before allocateBitmap")
+
+	// TODO should error due to data loss `ArrayByValue<Int32, 1> as! UInt32` `var bitmap Bitmap32 = allocateBitmap(width as! UInt32, height as! UInt32)`
+	var bitmap Bitmap32 = allocateBitmap(width as! UInt32, height as! UInt32)
+
+	serialPrintln("<Tofita> loadStbi32FromBuffer before rgba")
+	var rgba ArrayPointer<UInt32> = colors as! ArrayPointer<UInt32>
+	for y in height {
+		for x in width {
+			bitmap.pixels[y * width + x].ref.color = rgba[y * width + x]
+			// TODO This should be fixed in framebuffer? Or PNG really BGRA?
+			var temp UInt8 = bitmap.pixels[y * width + x].ref.rgba.ref.r
+			bitmap.pixels[y * width + x].ref.rgba.ref.r = bitmap.pixels[y * width + x].ref.rgba.ref.b
+			bitmap.pixels[y * width + x].ref.rgba.ref.b = temp
+		}
+	}
+
+	return bitmap
+}
+
+fun loadPng32(asset RamDiskAsset) Bitmap32 {
+	return loadStbi32FromBuffer(asset.data, asset.size)
+}
+
+fun loadJpeg32(asset RamDiskAsset) Bitmap32 {
+	return loadStbi32FromBuffer(asset.data, asset.size)
+}

@@ -94,22 +94,7 @@ function keyboardHandler();
 //#pragma pack()
 //_Static_assert(sizeof(TablePtr) == 10, "sizeof is incorrect");
 
-// STB library
-#define STBI_NO_SIMD
-#define STBI_NO_STDIO
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_ONLY_PNG
-#include <libc.c>
-#include <stb_image.h>
-
-#undef free
 //#undef malloc
-#undef realloc
-#undef memset
-#undef abs
-#undef pow
-#undef memcpy
-
 #define HEAP_ZERO_MEMORY 0
 #define stdout 0
 #define HANDLE void*
@@ -172,5 +157,5 @@ function kernelMain(/*const TODO*/void *params) {
 	HEXA_MAIN(0, nullptr);
 }
 `)
-// TODO Calling it `entry` causes renaming bug in `struct PeInterim .entry`
+// TODO Hexa: Calling it `entry` causes renaming bug in `struct PeInterim .entry`
 declare fun entryWrapper() Void

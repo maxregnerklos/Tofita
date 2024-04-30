@@ -37,7 +37,7 @@
 		"kernel/gui/concepts/viewer",
 		"kernel/gui/start",
 		"kernel/gui/blur",
-		"kernel/formats/stb_image/unlibc",
+		"kernel/formats/stbi/stbi",
 		"kernel/formats/ico/ico",
 		"kernel/formats/exe/pe",
 		"kernel/formats/cur/cur",
