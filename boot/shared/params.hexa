@@ -1,5 +1,5 @@
-// The Tofita Kernel
-// Copyright (C) 2022-2023 Oleh Petrenko
+// The Tofita Engine
+// Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
 
 // Constants: shared data from the bootloader to the kernel
 
-// Kernel memory upper half starts from here
+// Engine memory upper half starts from here
 let upper UInt64 = 0xffff800000000000u64
 // TODO map pixels right here to avoid pointer indirection?
 let frameBufferVirtualBase UInt64 = (upper + 768u64 * 1024u64 * 1024u64)

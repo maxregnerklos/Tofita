@@ -1,4 +1,4 @@
-// The Tofita Kernel
+// The Tofita Engine
 // Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
@@ -238,11 +238,11 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	drawVerbose("Setting RAM disk...", framebuffer)
 	setRamDisk(ramdisk)
 
-	serialPrintln("[[[uefi]]] begin: preparing kernel loader")
+	serialPrintln("[[[uefi]]] begin: preparing engine loader")
 
 	// TODO forward constructor arguments `var asset ByValue<RamDiskAsset> = new ByValue<RamDiskAsset>()`
 	var asset RamDiskAsset = new RamDiskAsset()
-	drawVerbose("Load kernel assets...", framebuffer)
+	drawVerbose("Load engine file...", framebuffer)
 	getRamDiskAsset(asset, "tofita.exe")
 	serialPrintf("[[[uefi]]] loaded asset 'tofita.exe' %d bytes at %8\n", asset.size, asset.data)
 
@@ -254,7 +254,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 
 	var addressOfEntryPoint UInt64 = 0
 
-	drawVerbose("Load kernel file...", framebuffer)
+	drawVerbose("Parse engine file...", framebuffer)
 	{
 		let ptr = asset.data as! ArrayPointer<UInt8>
 		// TODO `@readonly PeHeader` just make all fields `let` also decided to disallow `@` on types
@@ -291,7 +291,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 		addressOfEntryPoint = peOptionalHeader.mAddressOfEntryPoint
 	}
 
-	drawVerbose("Prepare kernel parameters...", framebuffer)
+	drawVerbose("Prepare engine parameters...", framebuffer)
 	let params = conventionalAllocateNext(sizeOf<UefiPayload>()) as! UefiPayload
 	{
 		var b = params as! ArrayPointer<UInt8>
@@ -377,7 +377,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	// Map memory
 	drawVerbose("Setup virtual memory...", framebuffer)
 
-	serialPrintln("[[[uefi]]] mapping pages for kernel loader")
+	serialPrintln("[[[uefi]]] mapping pages for the engine loader")
 
 	let pageSize = 4096u64
 
@@ -393,7 +393,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	// TODO is +1 needed? better make helper function
 	mapMemoryHuge(wholePhysicalStart, 0, (ram / pageSize) + 1u64, global: true)
 
-	drawVerbose("Setup kernel mode...", framebuffer)
+	drawVerbose("Setup engine modes...", framebuffer)
 	let startFunction = (conventionalOffset + pageSize) as! InitKernelTrampoline
 	// TODO somehow ensure size is enough to copy whole trampoline (-D arg same as version)
 	tmemcpy(startFunction as! ArrayPointer<UInt8>, trampolineCR3 as! ConstArrayPointer<UInt8>, 64)
@@ -430,7 +430,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	serialPrintHex((pml4entries as! UInt64))
 	serialPrint("\n")
 
-	drawVerbose("Entering kernel mode...", framebuffer)
+	drawVerbose("Engine start...", framebuffer)
 	startFunction((params as! UInt64), (pml4entries as! UInt64), stack, upper + addressOfEntryPoint)
 
 	// Should never return in practice

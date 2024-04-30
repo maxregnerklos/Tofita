@@ -1,5 +1,5 @@
-// The Tofita Kernel
-// Copyright (C) 2022-2023 Oleh Petrenko
+// The Tofita Engine
+// Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
 
 // CPU exceptions
 
-// In case of kernel crash set instruction pointer to here
+// In case of engine crash set instruction pointer to here
 fun kernelThreadLoop() {
 	serialPrintln("<Tofita> [looping forever]")
 	while true {

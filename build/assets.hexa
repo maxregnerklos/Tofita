@@ -1,4 +1,4 @@
-// The Tofita Kernel
+// The Tofita Engine
 // Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
@@ -81,7 +81,7 @@ fun packAssets(config Config) {
 		// TODO Hexa: hl [:ThisPart]
 		let folders [String:Buffer] = [:] // TODO `= []`?
 
-		// Bootloader reads this kernel file
+		// Bootloader reads this engine file
 		assetName.push('tofita.exe')
 		assetPath.push(folder + '\\tofita.exe')
 

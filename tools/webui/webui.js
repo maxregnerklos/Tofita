@@ -1,4 +1,4 @@
-// The Tofita Kernel
+// The Tofita Engine
 // Copyright (C) 2020 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ const http = require('http')
 const buffer = []
 
 //create a server object:
-http.createServer(function(req, res) {
+http.createServer(function (req, res) {
 	const url = req.url.trim().toLowerCase()
 	if (url == '/' || url == '/index.html') {
 		res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -81,7 +81,7 @@ http.createServer(function(req, res) {
 // Create server
 const server = net.createServer(onClientConnected)
 
-server.listen(port, host, function() {
+server.listen(port, host, function () {
 	console.log('Server listening on %j', server.address())
 	//require('child_process').exec(command)
 })

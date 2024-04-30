@@ -1,4 +1,4 @@
-// The Tofita Kernel
+// The Tofita Engine
 // Copyright (C) 2020-2023 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify

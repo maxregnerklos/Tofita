@@ -1,5 +1,5 @@
-// The Tofita Kernel
-// Copyright (C) 2022-2023 Oleh Petrenko
+// The Tofita Engine
+// Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -43,7 +43,7 @@ enum TofitaSyscalls : UInt32 {
 
 // Note: all pointers should be 64-bit even for 32-bit processes
 
-// Note: all pointers must be stored as `UInt64` to avoid in-kernel occasional dereferencing
+// Note: all pointers must be stored as `UInt64` to avoid in-engine occasional dereferencing
 
 @sizeOfLessOrEqual(4096)
 @struct class ProcessStartupInformation {

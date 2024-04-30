@@ -1,4 +1,4 @@
-// The Tofita Kernel
+// The Tofita Engine
 // Copyright (C) 2023 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ class TofitaThread {
 	var cr2PageFaultAddress UInt64
 
 	/// When syscall happens, thread halted and handled retroactively
-	/// in the kernel's event loop
+	/// in the engine's event loop
 	var syscallToHandle TofitaSyscalls // = Noop if no actions required
 
 	new (owner UInt64) {

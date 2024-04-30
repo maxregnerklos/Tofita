@@ -1,5 +1,5 @@
-// The Tofita Kernel
-// Copyright (C) 2022-2023 Oleh Petrenko
+// The Tofita Engine
+// Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -206,7 +206,7 @@ var qsodHappened = false
 fun qsod(format ConstArrayPointer<ClangWideChar>, extra UInt64, more UInt64, other UInt64 = 0) {
 	qsodHappened = true
 	haveToQuake = true
-	quakePrintf("Kernel stopped working. Please, reboot.\n".utf16())
+	quakePrintf("Engine stopped working. Please, reboot.\n".utf16())
 	quakePrintf(format, extra, more, other)
 	kernelThreadLoop()
 	// TODO reboot (to not having to print error message to screen)

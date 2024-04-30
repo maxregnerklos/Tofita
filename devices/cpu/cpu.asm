@@ -1,4 +1,4 @@
-; The Tofita Kernel
+; The Tofita Engine
 ; Copyright (C) 2020 Oleh Petrenko
 ;
 ; This program is free software: you can redistribute it and/or modify
@@ -112,16 +112,16 @@ global fallback_handler13
 global fallback_handler14
 global fallback_handler15
 
-; This is just a type declaration
+; This is just a type declaration, doesn't allocate a structure
 struc InterruptFrame
-.xmm0     resq 2
-.xmm1     resq 2
-.xmm2     resq 2
-.xmm3     resq 2
-.xmm4     resq 2
-.xmm5     resq 2
-.xmm6     resq 2
-.xmm7     resq 2
+.xmm0    resq 2
+.xmm1    resq 2
+.xmm2    resq 2
+.xmm3    resq 2
+.xmm4    resq 2
+.xmm5    resq 2
+.xmm6    resq 2
+.xmm7    resq 2
 
 .r15     resq 1
 .r14     resq 1
@@ -140,15 +140,15 @@ struc InterruptFrame
 .rcx     resq 1
 .rax     resq 1
 
-.index     resq 1
-.code     resq 1
-.ip     resq 1
-.cs     resq 1
-.flags  resq 1
-.sp    resq 1
-.ss     resq 1
-.fs     resq 1
-.gs     resq 1
+.index   resq 1
+.code    resq 1
+.ip      resq 1
+.cs      resq 1
+.flags   resq 1
+.sp      resq 1
+.ss      resq 1
+.fs      resq 1
+.gs      resq 1
 endstruc
 
 registerStorageSize equ (0x78 + 128)

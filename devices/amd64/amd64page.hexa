@@ -1,4 +1,4 @@
-// The Tofita Kernel
+// The Tofita Engine
 // Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
@@ -15,11 +15,11 @@
 
 // Used to limit address space for compatibility modes
 enum AddressAwareness : UInt8 {
-	Bit32limit2GB = 0x0000 // Default
-	Bit32limit3GB = 0x0001 // Large address aware (compatibility mode)
-	Bit32limit4GB = 0x0002 // Large address aware on 64-bit kernels
-	Bit64limit8TB = 0x0003 // Default
-	Bit64limit128TB = 0x0004 // Default on newer kernels (compatibility mode)
+	Bit32limit2GB = 0x0000 // Default on 32-bit CPUs for 32-bit apps
+	Bit32limit3GB = 0x0001 // Large address aware on 32-bit CPUs (compatibility mode)
+	Bit32limit4GB = 0x0002 // Large address aware on 64-bit CPUs
+	Bit64limit8TB = 0x0003 // Default on 64-bit CPUs for 64-bit apps
+	Bit64limit128TB = 0x0004 // Default on newer systems (compatibility mode)
 }
 
 // More https://wiki.osdev.org/Paging#Page_Directory

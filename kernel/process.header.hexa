@@ -1,5 +1,5 @@
-// The Tofita Kernel
-// Copyright (C) 2022-2023 Oleh Petrenko
+// The Tofita Engine
+// Copyright (C) 2022-2024 Oleh Petrenko
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -43,7 +43,7 @@ class TofitaProcess {
 	@volatile var cr2PageFaultAddress UInt64
 
 	// When syscall happens, process halted and handled retroactively
-	// in the kernel's event loop
+	// in the engine's event loop
 	@volatile var syscallToHandle TofitaSyscalls // = Noop if no actions required
 													  // TODO do this on per-thread basis
 
