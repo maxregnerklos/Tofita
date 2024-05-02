@@ -79,6 +79,7 @@ class ExeLoader<SIZE, HEADER> {
 		if Theme.verbose {
 			quakePrintf("[loadDll] loading {%S}\n".utf16(), name.utf16())
 		}
+
 		// TODO simple size ofs should be evaluated at normalizer to exclude ifs
 		let is64bit = sizeOf<SIZE>() == 8
 		let env = is64bit? "C:\\Windows\\System32\\" : "C:\\Windows\\SysWOW64\\"
@@ -427,6 +428,50 @@ class ExeLoader<SIZE, HEADER> {
 			exec.nextBase = exec.nextBase + pages * pageSize
 
 			ei.stackVirtual = buffer
+		}
+
+		// Allocate PEB
+		{
+			let pages = 1u32
+			let physical = PhysicalAllocator.allocateOnePagePreZeroed()
+			let where = 0x00000000FFFAE000u64 // From GDT TODO tibDestination
+			// TODO TEB 000007FF'FFFAE000 on 64-bit?
+
+			// TODO map upfront, to make this page occupied for proper relocation
+			mapMemory(exec.pml4, where, physical - wholePhysicalStart, pages, accessibleByUser: true)
+
+			let is64bit = ei.pei.is64bit
+			if is64bit {
+				let tib = physical as! TIB64
+
+				// TODO
+				tib.self = where
+				tib.exceptionList = where
+				tib.stackBase = where
+				tib.stackLimit = where
+				tib.subSystemTib = where
+				tib.arbitraryUserPointer = where
+
+				// PEB - Process Environment Block
+				let physicalPEB = PhysicalAllocator.allocateOnePagePreZeroed()
+				mapMemory(exec.pml4, where + 4096u64, physicalPEB - wholePhysicalStart, 1, accessibleByUser: true)
+				let wherePEB = physical + 0x60u64
+				let wherePEBaddr = wherePEB as! ArrayPointer<UInt64>
+				wherePEBaddr[0] = where + 4096u64
+
+				let processParameters = (physicalPEB + 0x20u64) as! ArrayPointer<UInt64>
+				processParameters[0] = where + 4096u64 + 256u64
+			} else {
+				let tib = physical as! TIB32
+
+				// TODO
+				tib.self = where as! UInt32
+				tib.exceptionList = where as! UInt32
+				tib.stackBase = where as! UInt32
+				tib.stackLimit = where as! UInt32
+				tib.subSystemTib = where as! UInt32
+				tib.arbitraryUserPointer = where as! UInt32
+			}
 		}
 
 		return ei

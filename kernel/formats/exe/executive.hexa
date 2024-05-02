@@ -15,28 +15,28 @@
 
 let tibDestination UInt64 = 0x00000000FFFAE000u64 // From GDT
 
-// 64-bit https://en.wikipedia.org/wiki/Win32_Thread_Information_Block
+/// 64-bit https://en.wikipedia.org/wiki/Win32_Thread_Information_Block
 @struct
 class TIB64 {
 	var exceptionList UInt64
 	var stackBase UInt64
 	var stackLimit UInt64
 	var subSystemTib UInt64
-	var fiberDataOrVersion UInt64 // union
+	var fiberDataOrVersion UInt64 // TODO union
 	var arbitraryUserPointer UInt64
-	var self UInt64 // *TIB64
+	var self UInt64 // TODO `var self TIB64`
 }
 // TODO Hexa: assert(sizeof(TIB64) == 56)
 
-// 32-bit https://en.wikipedia.org/wiki/Win32_Thread_Information_Block
+/// 32-bit https://en.wikipedia.org/wiki/Win32_Thread_Information_Block
 @struct
 class TIB32 {
 	var exceptionList UInt32
 	var stackBase UInt32
 	var stackLimit UInt32
 	var subSystemTib UInt32
-	var fiberDataOrVersion UInt32 // union
-	var arbitraryuserpointer UInt32
-	var self UInt32 // *TIB32
+	var fiberDataOrVersion UInt32 // TODO union
+	var arbitraryUserPointer UInt32
+	var self UInt32 // TODO `var self TIB32`
 }
 // TODO Hexa: assert(sizeof(TIB32) == 28)
