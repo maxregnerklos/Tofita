@@ -24,7 +24,10 @@ fun processInit(process TofitaProcess) {
 	process.limits = AddressAwareness.Bit64limit8TB
 	process.frame.cs = Selector.USER_CODE64_SEL_USER_MODE
 	process.frame.ss = Selector.USER_DATA32_SEL_USER_MODE
-	// TODO fs gs
+
+	process.frame.fs = Selector.USER_PEB32_SEL_USER_MODE
+	process.frame.gs = Selector.USER_PEB32_SEL_USER_MODE
+
 	// process.frame.flags = 0x002 // No interrupts
 	process.frame.flags = 0x202
 	process.syscallToHandle = TofitaSyscalls.Noop
