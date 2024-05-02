@@ -68,11 +68,12 @@ fun kernelThread() {
 
 					if syscall == TofitaSyscalls.DebugLog {
 						if process.is64bit {
-							serialPrintf("[[DebugLog:PID %d]] ", index)
+							serialPrintf("[[DebugLog:PID %d '%S']] ", index, process.name.utf16())
 						} else {
-							serialPrintf("[[DebugLog:PID %d (32-bit)]] ", index)
+							serialPrintf("[[DebugLog:PID %d '%S' (32-bit)]] ", index, process.name.utf16())
 						}
-						serialPrintf("[[rcx=%u rdx=%8 r8=%8]] ", frame.rcxArg0, frame.rdxArg1, frame.r8)
+
+						// TODO serialPrintf("[[rcx=%u rdx=%8 r8=%8]] ", frame.rcxArg0, frame.rdxArg1, frame.r8)
 
 						if probeForReadOkay(frame.rdxArg1, sizeOf<DebugLogPayload>()) {
 							var payload = frame.rdxArg1 as! DebugLogPayload
