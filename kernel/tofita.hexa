@@ -177,6 +177,11 @@ fun kernelInit(params UefiPayload) {
 
 	// Setup scheduling
 	currentThread = ThreadKind.THREAD_INIT
+	// FSBase is MSR 0xC0000100, GSBase is 0xC0000101, and KernelGSBase is 0xC0000102
+	// TODO same in trapeze
+	wrmsr(0xC0000100u64, tibDestination)
+	wrmsr(0xC0000101u64, tibDestination)
+	wrmsr(0xC0000102u64, tibDestination)
 
 	// GUI engine thread
 	{
@@ -189,6 +194,8 @@ fun kernelInit(params UefiPayload) {
 		// TODO allocate as physical memory
 		guiThreadFrame.sp = guiStack.ref as! UInt64 + stackSizeForKernelThread
 		guiThreadFrame.ss = Selector.SYS_DATA32_SEL
+
+		// TODO gs/fs
 	}
 
 	// Main engine thread
@@ -201,6 +208,8 @@ fun kernelInit(params UefiPayload) {
 		kernelThreadFrame.cs = Selector.SYS_CODE64_SEL
 		kernelThreadFrame.sp = kernelStack as! UInt64 + stackSizeForKernelThread
 		kernelThreadFrame.ss = Selector.SYS_DATA32_SEL
+
+		// TODO gs/fs
 	}
 
 	// Idle process
