@@ -28,6 +28,7 @@ enum Selector : UInt64 {
 	USER_CODE64_SEL_USER_MODE = 0x33 // Execute/Read/UserMode
 	USER_CODE32_SEL_USER_MODE = 0x23 // Execute/Read/UserMode
 	USER_DATA32_SEL_USER_MODE = 0x2b // Read/Write/UserMode
+	USER_PEB32_SEL_USER_MODE = 0x53 // Read/Write/UserMode
 }
 
 // Global Descriptor Table aka GDT 16 records
