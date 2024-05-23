@@ -21,7 +21,7 @@ fun localAlloc(flags UInt32, bytes SizeOfPointer) HLocal
 @dllImport
 @rename('HeapAlloc')
 declare
-fun heapAlloc(heap UInt32, flags UInt32, bytes SizeOfPointer) ArrayPointer<Void>
+fun heapAlloc(heap SizeOfPointer, flags UInt32, bytes SizeOfPointer) ArrayPointer<Void>
 // TODO
 // let kernel32 = "kernel32.dll" (uppercase?)
 // @dllImport(kernel32) (fpc)
