@@ -613,6 +613,13 @@ fun getWindowLongW(stub SizeOfPointer) SizeOfPointer {
     return 0
 }
 
+// TODO #if x64
+@dllExport('GetWindowLongPtrW')
+fun getWindowLongPtrW(stub SizeOfPointer) SizeOfPointer {
+    // TODO
+    return 0
+}
+
 @dllExport('GetWindowRect')
 fun getWindowRect(stub SizeOfPointer) SizeOfPointer {
     // TODO
@@ -735,6 +742,12 @@ fun setMenu(stub SizeOfPointer) SizeOfPointer {
 
 @dllExport('SetWindowLongW')
 fun setWindowLongW(stub SizeOfPointer) SizeOfPointer {
+    // TODO
+    return 0
+}
+
+@dllExport('SetWindowLongPtrW')
+fun setWindowLongPtrW(stub SizeOfPointer) SizeOfPointer {
     // TODO
     return 0
 }
