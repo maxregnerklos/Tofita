@@ -47,8 +47,8 @@ class InterruptFrame {
 	@volatile var flags UInt64 // RFLAGS\EFLAGS (same on AMD64 and x86)
 	@volatile var sp UInt64 // Stack pointer
 	@volatile var ss Selector // Stack segment
-	@volatile var fs UInt64 // 32-bit PEB
-	@volatile var gs UInt64 // 64-bit PEB
+	@volatile var fs Selector // 32-bit PEB
+	@volatile var gs Selector // 64-bit PEB
 
 	new ()
 }
