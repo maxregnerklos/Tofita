@@ -78,7 +78,7 @@
 
     // CR3 trampoline
     void __attribute__((fastcall))
-    trampolineCR3(volatile uint64_t kernelParams, volatile uint64_t pml4, volatile uint64_t stack,
+    trampolineCR3(volatile uint64_t engineParams, volatile uint64_t pml4, volatile uint64_t stack,
                 volatile uint64_t entry);
 
     void *tmemcpy(void *dest, const void *src, uint64_t count) {

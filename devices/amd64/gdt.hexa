@@ -80,7 +80,7 @@ class GdtDescriptorEx {
 	// If 0 code in this segment can only be executed from the ring set in "privilege"
 	@bits(1) var execute UInt8 // 1 = code, 0 = data
 	@bits(1) var one UInt8
-	@bits(2) var privilege UInt8 // 0 = ring0/kernel, 3 = ring3
+	@bits(2) var privilege UInt8 // 0 = ring0/engine, 3 = ring3
 	@bits(1) var present UInt8
 	// Flags
 	@bits(4) var limit UInt8

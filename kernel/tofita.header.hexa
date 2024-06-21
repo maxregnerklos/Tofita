@@ -18,10 +18,10 @@ var paramsCache = null as! UefiPayload
 
 // For syscalls & scheduler
 // TODO `@volatile class X {}` ?
-@volatile var pml4kernelThread = null as! ArrayPointer<ByValue<PageEntry>>
+@volatile var pml4engineThread = null as! ArrayPointer<ByValue<PageEntry>>
 
-// Flag to keep in kernel mode and not switch to user mode
-@volatile var kernelBusy = false
+// Flag to keep in engine mode and not switch to user mode
+@volatile var engineBusy = false
 
 // Avoids PIT-triggered rendering
 // This is not a best solution

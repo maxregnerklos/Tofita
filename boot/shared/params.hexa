@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-// Constants: shared data from the bootloader to the kernel
+// Constants: shared data from the bootloader to the engine
 
 // Engine memory upper half starts from here
 let upper UInt64 = 0xffff800000000000u64
@@ -63,7 +63,7 @@ class Physical<T> {
 	}
 }*/
 
-// Data transferred from UEFI application into kernel loader
+// Data transferred from UEFI application into engine loader
 
 @struct
 @sizeOf(40)
@@ -111,7 +111,7 @@ class RamDisk {
 class UefiPayload {
 	var pml4 UInt64
 	var stack UInt64
-	/// Physical address of where kernel loader placed
+	/// Physical address of where engine loader placed
 	var physicalBuffer UInt64
 	var physicalBytes UInt64
 	/// Virtual address of where RAM usage bit-map stored
@@ -133,7 +133,7 @@ class UefiPayload {
 	// TODO many reserved fields, ensure whole thing is 4k size
 }
 
-declare InitKernel = @convention(fastcall) (params UefiPayload) => Void
+declare InitEngine = @convention(fastcall) (params UefiPayload) => Void
 // TODO ^ fix that in quake
-declare InitKernelTrampoline = @convention(fastcall) (kernelParams UInt64, pml4 UInt64, stack UInt64,
+declare InitEngineTrampoline = @convention(fastcall) (engineParams UInt64, pml4 UInt64, stack UInt64,
 												entry UInt64) => Void

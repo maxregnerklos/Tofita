@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-// Boot loader: entered by UEFI, reads all UEFI data and starts kernel loader
+// Boot loader: entered by UEFI, reads all UEFI data and starts engine loader
 
 fun tmemcpy(dest ArrayPointer<UInt8>, src ConstArrayPointer<UInt8>, count UInt64) Void {
 	for i in count {
@@ -33,7 +33,7 @@ fun memset(dest ArrayPointer<UInt8>, e Int32, len UInt64) Void {
 @rename("trampolineCR3") // TODO Hexa: @asIs
 @convention(fastcall) @fastcall // TODO
 declare fun
-trampolineCR3(@volatile kernelParams UInt64, @volatile pml4 UInt64, @volatile stack UInt64,
+trampolineCR3(@volatile engineParams UInt64, @volatile pml4 UInt64, @volatile stack UInt64,
 			  @volatile entry UInt64) Void
 
 // CPU manipulation
@@ -74,7 +74,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 		serialPrintf("[[[uefi]]] UEFI revision %d.%d\n", major, minor)
 	}
 
-	// Actually, no matter where lower is present, cause no lower-relative addressing done in kernel
+	// Actually, no matter where lower is present, cause no lower-relative addressing done in engine
 	// after calling cr3 at the first instruction
 	// so it is safe to allocate it at random position in conventional memory
 
@@ -264,8 +264,8 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 		serialPrintf("PE32(+) optional header signature 0x020B == %d == %d\n", peOptionalHeader.mMagic,
 					 0x020B)
 		serialPrintf("PE32(+) size of image == %d\n", peOptionalHeader.mSizeOfImage)
-		let kernelBase = conventionalAllocateNext(peOptionalHeader.mSizeOfImage)
-		memset(kernelBase as! ArrayPointer<UInt8>, 0, peOptionalHeader.mSizeOfImage) // Zeroing
+		let engineBase = conventionalAllocateNext(peOptionalHeader.mSizeOfImage)
+		memset(engineBase as! ArrayPointer<UInt8>, 0, peOptionalHeader.mSizeOfImage) // Zeroing
 
 		// Copy sections
 		let imageSectionHeader =
@@ -281,7 +281,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 				imageSectionHeader[i].ref.mName.ref,
 				imageSectionHeader[i].ref.mSizeOfRawData
 			)
-			let where UInt64 = (kernelBase as! UInt64) + imageSectionHeader[i].ref.mVirtualAddress
+			let where UInt64 = (engineBase as! UInt64) + imageSectionHeader[i].ref.mVirtualAddress
 
 			tmemcpy(where as! ArrayPointer<UInt8>,
 					((asset.data as! UInt64) + (imageSectionHeader[i].ref.mPointerToRawData as! UInt64)) as! ConstArrayPointer<UInt8>,
@@ -394,8 +394,9 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	mapMemoryHuge(wholePhysicalStart, 0, (ram / pageSize) + 1u64, global: true)
 
 	drawVerbose("Setup engine modes...", framebuffer)
-	let startFunction = (conventionalOffset + pageSize) as! InitKernelTrampoline
 	// TODO somehow ensure size is enough to copy whole trampoline (-D arg same as version)
+	let startFunction = (conventionalOffset + pageSize) as! InitEngineTrampoline
+
 	tmemcpy(startFunction as! ArrayPointer<UInt8>, trampolineCR3 as! ConstArrayPointer<UInt8>, 64)
 	mapMemory((startFunction as! UInt64), (startFunction as! UInt64), 1, 0, global: false)
 
@@ -424,7 +425,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	params.physicalRamBitMaskVirtual = (wholePhysicalStart as! UInt64) + params.physicalRamBitMaskVirtual
 	let params = ((wholePhysicalStart as! UInt64) + (params as! UInt64)) as! UefiPayload
 
-	serialPrintln("[[[uefi]]] done: all done, entering kernel loader")
+	serialPrintln("[[[uefi]]] done: all done, entering engine loader")
 
 	serialPrint("[[[uefi]]] CR3 points to: ")
 	serialPrintHex((pml4entries as! UInt64))

@@ -127,7 +127,7 @@ fun tofitaFastSystemCall(rcx TofitaSyscalls,
 }
 
 //
-// Kernel32
+// General
 //
 
 @dllExport('tofitaExitProcess')
@@ -142,7 +142,7 @@ fun tofitaDebugLog(message ConstArrayPointer<ClangWideChar>, extra UInt64 = 0, m
 	// TODO ^ optimize to allocate on stack, some lifetime flag on creation and usage?
 	payload.ref.message = message as! UInt64 // TODO ConstArrayPointer.address UInt64/32
 	// TODO ConstArrayPointer.unsafeFromAddress(PointerAddress.unsafeFrom(123u64))
-	// TODO on the kernel side ValidateUserPointer<DebugLogPayload>.clone() <= does SEH copy of sizeOf
+	// TODO on the engine side ValidateUserPointer<DebugLogPayload>.clone() <= does SEH copy of sizeOf
 	// TODO hint `as! PointerAddress` use instead `fromAddress`
 	payload.ref.extra = extra
 	payload.ref.more = more
@@ -177,7 +177,7 @@ fun njraaGetOrCreateWindowFramebuffer(windowId UInt64, fb WindowFramebuffer) Voi
 }
 
 //
-// User32
+// User Interface
 //
 
 @dllExport('tofitaCreateWindowEx')

@@ -108,8 +108,8 @@ fun guiThread() {
 			halt()
 		}
 
-		// Note: it must yield, otherwise never enters a kernel,
-		// because scheduler never switches to the kernel from GUI thread
+		// Note: it must yield, otherwise never enters an engine,
+		// because scheduler never switches to the engine from GUI thread
 		// This allows to have better FPS
 		yield()
 	}

@@ -16,7 +16,7 @@
 // Bindings to the .asm
 // TODO `@emitHeader@linkAsIs` undesired parsing? also test `@x/*y*/@z`
 // TODO `@linkAsIs` should assume `@emitHeader`?
-@emitHeader @linkAsIs /*@rename('enterKernelMode')*/ declare fun enterKernelMode() Void
+@emitHeader @linkAsIs /*@rename('enterEngineMode')*/ declare fun enterEngineMode() Void
 @emitHeader @linkAsIs /*@rename('selectSegment')*/ declare fun selectSegment() Void
 @emitHeader @linkAsIs /*@rename('enterUserMode')*/ declare fun enterUserMode() Void
 @emitHeader @linkAsIs /*@rename('timerInterrupt')*/ declare fun timerInterrupt() Void

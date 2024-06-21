@@ -32,11 +32,11 @@ declare fun tofitaFastSystemCall(rcx TofitaSyscalls,
 @dllImport @linkAsIs
 declare fun tofitaDebugLog(message ConstArrayPointer<ClangWideChar>, extra UInt64 = 0, more UInt64 = 0) Void
 
-// Kernel32
+// General
 @dllImport @linkAsIs
 declare fun tofitaExitProcess(exitCode UInt32) Void
 
-// User32
+// User Interface
 @dllImport @linkAsIs
 declare fun tofitaCreateWindowEx(payload CreateWindowExPayload) UInt64
 @dllImport @linkAsIs

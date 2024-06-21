@@ -13,10 +13,10 @@
 ; You should have received a copy of the GNU Lesser General Public License
 ; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-; Based on https://github.com/redox-os/kernel/blob/47048102efd9961587ca0c6f83c6d93f729e664c/src/asm/x86_64/trampoline.asm
+; Based on Redox OS trampoline for bringing up APs (x86_64/trampoline.asm)
 
 ; This code is used to start SMP cores (AP)
-; Sets GDT, CPU features, paging, then enters 64-bit mode & jumps to kernel
+; Sets GDT, CPU features, paging, then enters 64-bit mode & jumps to the engine
 default abs ; All addresses are relative to 0x00008000
 org 0x00008000 ; Known absolute address in NON-virtual memory
 section .head ; Required for proper linking, but no sections actually created
@@ -105,7 +105,7 @@ realModeApStart:
     ; Enable paging and protection simultaneously
     mov ebx, cr0
     ; 31: Paging
-    ; 16: Write protect kernel
+    ; 16: Write protect engine
     ; 0: Protected Mode
     or ebx, 1 << 31 | 1 << 16 | 1
     mov cr0, ebx

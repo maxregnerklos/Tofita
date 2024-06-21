@@ -15,15 +15,15 @@
 
 // Scheduling
 enum ThreadKind : UInt8 {
-	THREAD_INIT = 0 // kernelMain, it will be destroyed
+	THREAD_INIT = 0 // engineMain, it will be destroyed
 	THREAD_GUI = 1
-	THREAD_KERNEL = 2
+	THREAD_ENGINE = 2
 	THREAD_USER = 3
 }
 
 @volatile var currentThread ThreadKind = ThreadKind.THREAD_INIT
 
-var kernelThreadFrame = new InterruptFrame()
+var engineThreadFrame = new InterruptFrame()
 
 // ~121 times per second
 var timerCalled UInt64 = 0
@@ -81,8 +81,8 @@ fun markAllProcessessSchedulable() {
 	}
 }
 
-fun switchToKernelThread(@volatile frame InterruptFrame) {
-	if currentThread == ThreadKind.THREAD_KERNEL {
+fun switchToEngineThread(@volatile frame InterruptFrame) {
+	if currentThread == ThreadKind.THREAD_ENGINE {
 		return
 	}
 
@@ -96,9 +96,9 @@ fun switchToKernelThread(@volatile frame InterruptFrame) {
 	}
 
 	// Restore
-	currentThread = ThreadKind.THREAD_KERNEL
-	writeCr3((pml4kernelThread as! UInt64) - (wholePhysicalStart as! UInt64))
-	tmemcpy(frame as! ArrayPointer<UInt8>, kernelThreadFrame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
+	currentThread = ThreadKind.THREAD_ENGINE
+	writeCr3((pml4engineThread as! UInt64) - (wholePhysicalStart as! UInt64))
+	tmemcpy(frame as! ArrayPointer<UInt8>, engineThreadFrame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
 }
 
 fun switchToNextProcess(@volatile frame InterruptFrame) {
@@ -113,11 +113,11 @@ fun switchToNextProcess(@volatile frame InterruptFrame) {
 	@volatile let old = currentProcess
 	currentProcess = process.pid
 	// TODO in .exe loader, disallow changing of CR3 until not fully loaded
-	// another option is to save/restore CR3 used by kernel thread
+	// another option is to save/restore CR3 used by engine thread
 	writeCr3((process.pml4 as! UInt64) - (wholePhysicalStart as! UInt64))
 	process.scheduleOnNextTick = false
 
-	// Note: pid 0 is not real process, so keep things in kernel
+	// Note: pid 0 is not real process, so keep things in engine
 	if next != 0 {
 		if currentThread == ThreadKind.THREAD_GUI {
 			// Save
@@ -126,21 +126,21 @@ fun switchToNextProcess(@volatile frame InterruptFrame) {
 			// Save
 			var processOld TofitaProcess = processes[old]
 			tmemcpy(processOld.frame as! ArrayPointer<UInt8>, frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
-		} else if currentThread == ThreadKind.THREAD_KERNEL {
+		} else if currentThread == ThreadKind.THREAD_ENGINE {
 			// Save
-			tmemcpy(kernelThreadFrame as! ArrayPointer<UInt8>, frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
+			tmemcpy(engineThreadFrame as! ArrayPointer<UInt8>, frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
 		}
 
 		// Restore
 		currentThread = ThreadKind.THREAD_USER
 		tmemcpy(frame as! ArrayPointer<UInt8>, process.frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
 	} else {
-		writeCr3((pml4kernelThread as! UInt64) - (wholePhysicalStart as! UInt64))
-		switchToKernelThread(frame)
+		writeCr3((pml4engineThread as! UInt64) - (wholePhysicalStart as! UInt64))
+		switchToEngineThread(frame)
 	}
 }
 
-var kernelThreadBusy = false
+var engineThreadBusy = false
 fun switchToGuiThread(@volatile frame InterruptFrame) {
 	if currentThread == ThreadKind.THREAD_GUI {
 		return
@@ -150,13 +150,13 @@ fun switchToGuiThread(@volatile frame InterruptFrame) {
 		// Save
 		let process TofitaProcess = processes[currentProcess]
 		tmemcpy(process.frame as! ArrayPointer<UInt8>, frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
-	} else if currentThread == ThreadKind.THREAD_KERNEL {
-		if kernelThreadBusy {
+	} else if currentThread == ThreadKind.THREAD_ENGINE {
+		if engineThreadBusy {
 			return // Wait to avoid race conditions
 		}
 		// Save
 		// TODO instead of manual frame copy, .asm must take a pointer to the frame and write there directly
-		tmemcpy(kernelThreadFrame as! ArrayPointer<UInt8>, frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
+		tmemcpy(engineThreadFrame as! ArrayPointer<UInt8>, frame as! ConstArrayPointer<UInt8>, sizeOf<InterruptFrame>())
 	}
 
 	// Restore
@@ -202,7 +202,7 @@ fun timerInterruptHandler(@volatile frame InterruptFrame) {
 		if currentThread == ThreadKind.THREAD_INIT {
 			// TODO hexa error == statement: currentThread == THREAD_INIT
 			guiThreadFrame.flags = frame.flags // TODO
-			kernelThreadFrame.flags = frame.flags // TODO
+			engineThreadFrame.flags = frame.flags // TODO
 
 			// Restore
 			currentThread = ThreadKind.THREAD_GUI
@@ -219,7 +219,7 @@ fun timerInterruptHandler(@volatile frame InterruptFrame) {
 				} else {
 					nextIsGuiThread = true
 					if nextIsUserProcess == true {
-						switchToKernelThread(frame)
+						switchToEngineThread(frame)
 					} else {
 						switchToNextProcess(frame)
 					}

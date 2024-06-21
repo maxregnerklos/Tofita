@@ -29,8 +29,8 @@ fun chkstkStub() Void {}
 @extern @rename('versionTag') declare let versionTag Int
 
 /// Entry point from trampoline.asm
-fun kernelInit(params UefiPayload) {
-	serialPrintln("<Tofita> Greentea OS " + versionMajor + "." + versionMinor + "." + versionTag + " kernel loaded and operational")
+fun engineInit(params UefiPayload) {
+	serialPrintln("<Tofita> Greentea OS " + versionMajor + "." + versionMinor + "." + versionTag + " engine loaded and operational")
 	serialPrintf("<Tofita> CR3 points to: %8\n", params.pml4 as! UInt64)
 	// TODO `anyPtrOrObj as! UInt32` -> error precision lost on 64-bit
 	paramsCache = params
@@ -51,7 +51,7 @@ fun kernelInit(params UefiPayload) {
 		pat()
 	}
 
-	// TODO move to kernel\health\sanityChecks.hexa
+	// TODO move to engine\health\sanityChecks.hexa
 	if false /*not SanityChecks.isVirtualMemoryOkay() { error }*/ {
 		mapMemory(pml4entries, 4096, 4096, 256, accessibleByUser: false)
 		mapMemory(pml4entries, 4096, 4096, 256, accessibleByUser: false)
@@ -177,7 +177,7 @@ fun kernelInit(params UefiPayload) {
 
 	// Setup scheduling
 	currentThread = ThreadKind.THREAD_INIT
-	// FSBase is MSR 0xC0000100, GSBase is 0xC0000101, and KernelGSBase is 0xC0000102
+	// FSBase is MSR 0xC0000100, GSBase is 0xC0000101, and EngineGSBase is 0xC0000102
 	// TODO same in trapeze
 	wrmsr(0xC0000100u64, tibDestination)
 	wrmsr(0xC0000101u64, tibDestination)
@@ -186,13 +186,13 @@ fun kernelInit(params UefiPayload) {
 	// GUI engine thread
 	{
 		memset(guiThreadFrame as! ArrayPointer<UInt8>, 0, sizeOf<InterruptFrame>()) // Zeroing TODO sizeOf
-		memset(guiStack.ref, 0, stackSizeForKernelThread) // Zeroing
+		memset(guiStack.ref, 0, stackSizeForEngineThread) // Zeroing
 		// TODO allocate stack with PhyAllocator
 
 		guiThreadFrame.ip = guiThreadStart as! UInt64
 		guiThreadFrame.cs = Selector.SYS_CODE64_SEL
 		// TODO allocate as physical memory
-		guiThreadFrame.sp = guiStack.ref as! UInt64 + stackSizeForKernelThread
+		guiThreadFrame.sp = guiStack.ref as! UInt64 + stackSizeForEngineThread
 		guiThreadFrame.ss = Selector.SYS_DATA32_SEL
 
 		// TODO gs/fs
@@ -201,13 +201,13 @@ fun kernelInit(params UefiPayload) {
 	// Main engine thread
 	{
 		// TODO InterruptFrame.fillWithZeros() in constructor
-		memset(kernelThreadFrame as! ArrayPointer<UInt8>, 0, sizeOf<InterruptFrame>()) // Zeroing
-		memset(kernelStack.ref, 0, stackSizeForKernelThread) // Zeroing
+		memset(engineThreadFrame as! ArrayPointer<UInt8>, 0, sizeOf<InterruptFrame>()) // Zeroing
+		memset(engineStack.ref, 0, stackSizeForEngineThread) // Zeroing
 
-		kernelThreadFrame.ip = kernelThreadStart as! UInt64
-		kernelThreadFrame.cs = Selector.SYS_CODE64_SEL
-		kernelThreadFrame.sp = kernelStack as! UInt64 + stackSizeForKernelThread
-		kernelThreadFrame.ss = Selector.SYS_DATA32_SEL
+		engineThreadFrame.ip = engineThreadStart as! UInt64
+		engineThreadFrame.cs = Selector.SYS_CODE64_SEL
+		engineThreadFrame.sp = engineStack as! UInt64 + stackSizeForEngineThread
+		engineThreadFrame.ss = Selector.SYS_DATA32_SEL
 
 		// TODO gs/fs
 	}
@@ -226,7 +226,7 @@ fun kernelInit(params UefiPayload) {
 			windowsList[i] = window
 		}
 
-		// TODO make a kernel a process too with ultimate priority
+		// TODO make a engine a process too with ultimate priority
 		// TODO process.name = "Tofita"
 		// TODO idle process must have NxN threads, thread per CPU core?
 		let idle TofitaProcess = new TofitaProcess()
@@ -240,7 +240,7 @@ fun kernelInit(params UefiPayload) {
 		// TODO idle.name = "System Idle Process"
 		// TODO idle.name = "Tofita"? is idle process really required?
 		currentProcess = 0
-		pml4kernelThread = processes[0].pml4
+		pml4engineThread = processes[0].pml4
 	}
 
 	// GUI
@@ -283,8 +283,8 @@ fun kernelInit(params UefiPayload) {
 @rename('__sync_synchronize')
 declare fun __sync_synchronize() Void
 
-fun kernelMain(params UefiPayload) {
-	kernelInit(params)
+fun engineMain(params UefiPayload) {
+	engineInit(params)
 
 	// This is probably useless but looks cool
 	__sync_synchronize()
@@ -294,7 +294,7 @@ fun kernelMain(params UefiPayload) {
 
 	// sti -> start scheduling here
 	// It will erase whole stack on next scheduling
-	// TODO kernel `yield`/`await`
+	// TODO engine `yield`/`await`
 	// TODO de-allocate pre-thread after first yield
 	while true {
 		enableAllInterruptsAndHalt()
@@ -304,7 +304,7 @@ fun kernelMain(params UefiPayload) {
 }
 
 // Data passed from UEFI
-@rename('kernelParams') declare let kernelParams UefiPayload
+@rename('engineParams') declare let engineParams UefiPayload
 
 // Entry point of the project
-kernelMain(kernelParams)
+engineMain(engineParams)

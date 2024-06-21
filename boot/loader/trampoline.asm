@@ -30,7 +30,7 @@ section .head
 ; rcx - first argument - (uint64_t)params
 ; rdx - second argument - (uint64_t)paging::pml4entries (CR3)
 ; r8 - third argument - stack
-; r9 - fourth argument - upper (kernel)
+; r9 - fourth argument - upper (engine)
 ; xmm0, xmm1, xmm2, xmm3 for floating point arguments
 ; rax - returned value
 

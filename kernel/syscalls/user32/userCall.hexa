@@ -48,7 +48,7 @@ fun userCallHandled(@volatile process TofitaProcess, syscall TofitaSyscalls) Boo
 			// no no no no no! just copy into global (TLS) char16[MAX_PATH]
 			// and copy string from there! yeah! sehStringFromUTF16z(addr, limit: MAX_PATH - 1?)
 			window.title = String.fromUTF16z(payload.lpWindowName as! ConstArrayPointer<UInt16>)
-			// TODO ^ limit to lower address space, to not capable of reading kernel mem
+			// TODO ^ limit to lower address space, to not capable of reading engine mem
 			// TODO another idea of temporal mapping to zero page?
 			// ^ this way values would be zero anyway so can be easily tested with guard
 		} else {
@@ -87,7 +87,7 @@ fun userCallHandled(@volatile process TofitaProcess, syscall TofitaSyscalls) Boo
 	// TODO to exhaustive switch over selected syscall enum subset
 	// ^ just multi-inherit multiple enums
 	if syscall == TofitaSyscalls.GetMessage {
-		// TODO pointers should be validated to be not within kernel space!
+		// TODO pointers should be validated to be not within engine space!
 		if not probeForWriteOkay(frame.rdxArg1, sizeOf<GetMessagePayload>()) {
 			// TODO wrote here %S instead of %8 and it crashed, must think about such safety
 			// serialPrintf("<> GetMessage frame.rdxArg1 probe fail %8\n", frame.rdxArg1)

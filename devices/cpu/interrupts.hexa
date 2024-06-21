@@ -228,7 +228,7 @@ class TssEntry {
 @aligned(64) @volatile var globalTss TssEntry = new TssEntry()
 
 // rsp0stack = exp0 in TSS
-// Stack used by kernel to handle syscalls/interrupts
+// Stack used by engine to handle syscalls/interrupts
 // `4096 * 32 = 131072`
 // TODO `let`
 let rspStackSize = 131072u64
@@ -284,7 +284,7 @@ fun syscallInterruptHandler(frame InterruptFrame) {
 	@volatile let index = frame.rcxArg0 as! TofitaSyscalls
 
 	// No-op
-	// TODO kernel must decide
+	// TODO engine must decide
 	if (index as! UInt64) < userSyscalls {
 		process.schedulable = true
 		return
@@ -292,7 +292,7 @@ fun syscallInterruptHandler(frame InterruptFrame) {
 
 	process.syscallToHandle = index
 
-	switchToKernelThread(frame)
+	switchToEngineThread(frame)
 	// TODO weird frame+8 offset if called switchToNextProcess
 	// switchToNextProcess(frame)
 	{
@@ -306,7 +306,7 @@ fun syscallInterruptHandler(frame InterruptFrame) {
 
 	if index == TofitaSyscalls.ExitProcess {
 		serialPrintf("[[ExitProcess:PID %d]] %d\n", currentProcess, frame.rdxArg1)
-		// TODO kernel wake up
+		// TODO engine wake up
 		// TODO destroy process
 		var process TofitaProcess = processes[currentProcess]
 		process.schedulable = false
@@ -439,7 +439,7 @@ fun setupInterruptsAndExceptions() {
 	loadIdt(cacheIdtr)
 
 	serialPrintln("[cpu] Select segments of value SYS_CODE64_SEL & SYS_DATA32_SEL")
-	enterKernelMode()
+	enterEngineMode()
 
 	// Set PIT frequency
 	// Valid values: 57 Hz, 121 Hz, 173 Hz, 209 Hz, 363 Hz

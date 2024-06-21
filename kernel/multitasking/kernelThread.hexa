@@ -14,19 +14,19 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @emitHeader @linkAsIs
-declare fun kernelThreadStart() Void
+declare fun engineThreadStart() Void
 
-let stackSizeForKernelThread UInt64 = 1024 * 1024u64
+let stackSizeForEngineThread UInt64 = 1024 * 1024u64
 
 @aligned(64)
 // TODO let
 // TODO ArrayByValue cannot be `var`
-// TODO use `stackSizeForKernelThread` in <>
-var kernelStack ArrayByValue<UInt8, 1048576> = [0]
+// TODO use `stackSizeForEngineThread` in <>
+var engineStack ArrayByValue<UInt8, 1048576> = [0]
 
-/// Entry point of the main kernel thread
-fun kernelThread() {
-	serialPrintln("<Tofita> [kernelThread] thread started")
+/// Entry point of the main engine thread
+fun engineThread() {
+	serialPrintln("<Tofita> [engineThread] thread started")
 
 	// TODO move to preTest with infinite loop on fail
 	//serialPrintf("<seh> before\n")
@@ -41,7 +41,7 @@ fun kernelThread() {
 	// The concept here is to delay syscall handling in an event-loop manner
 	// Has good multi-tasking capability due to round-robin iteration
 	// but should be improved in future for better latency
-	// or simply do kernel-thread-per-user-thread model
+	// or simply do engine-thread-per-user-thread model
 	while true {
 		// TODO optimize cast to 1u64
 		// TODO no need for `@volatile` here and there
@@ -54,15 +54,15 @@ fun kernelThread() {
 				// TODO `present` is useless when we have nullability?
 				// TODO global isAnythingHappened to avoid Noop check for every process. It also must me TLS?
 				if process.syscallToHandle != TofitaSyscalls.Noop {
-					kernelThreadBusy = true
+					engineThreadBusy = true
 					@volatile let syscall = process.syscallToHandle
 					process.syscallToHandle = TofitaSyscalls.Noop
 					@volatile var frame = process.frame
 
 					// Remember pml4 for proper restore from scheduling
-					pml4kernelThread = process.pml4
+					pml4engineThread = process.pml4
 					// Select pml4 to work within current process memory
-					writeCr3((pml4kernelThread as! UInt64) - (wholePhysicalStart as! UInt64))
+					writeCr3((pml4engineThread as! UInt64) - (wholePhysicalStart as! UInt64))
 
 					// TODO refactor to separate syscall handler per-DLL and handlers table by syscall id
 
@@ -104,8 +104,8 @@ fun kernelThread() {
 
 						// Select pml4 of idle process for safety
 						// TODO idle as `idle TofitaProcess` var, not `[0]`
-						pml4kernelThread = processes[0].pml4
-						writeCr3((pml4kernelThread as! UInt64) - (wholePhysicalStart as! UInt64))
+						pml4engineThread = processes[0].pml4
+						writeCr3((pml4engineThread as! UInt64) - (wholePhysicalStart as! UInt64))
 
 						// De-allocate process
 						// TODO as TofitaProcess class method
@@ -130,9 +130,9 @@ fun kernelThread() {
 						}
 
 						// Select pml4 of idle process for safety
-						pml4kernelThread = processes[0].pml4
+						pml4engineThread = processes[0].pml4
 						// TODO `TofitaProcess.this.writeOwnCr3`
-						writeCr3((pml4kernelThread as! UInt64) - (wholePhysicalStart as! UInt64))
+						writeCr3((pml4engineThread as! UInt64) - (wholePhysicalStart as! UInt64))
 
 						// De-allocate process
 						processDestroy(process)
@@ -169,7 +169,7 @@ fun kernelThread() {
 					}
 
 					// TODO `@defer` this
-					kernelThreadBusy = false
+					engineThreadBusy = false
 				}
 			}
 			index++

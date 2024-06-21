@@ -17,13 +17,13 @@
 let physical_not_found = 0u64
 // A lot of non-zero bits
 // i.e. good in case of cosmic rays or something
-// Completely reserved by hardware and kernel executable image
+// Completely reserved by hardware and engine executable image
 // Anything that is not defined considered to be PAGE_RESERVED
 let page_reserved = 0xFFu8
 let page_free = 0b1010u8
 let page_full = 0b0101u8
 let page_mask = 0b1111u8
-// TODO mask user-mode pages differently than kernel-mode
+// TODO mask user-mode pages differently than engine-mode
 // TODO let granular_partial = 0b1010
 // TODO let granular_full = 0b1001
 // TODO should return UInt64, cause x86-64 supports a 48-bit virtual address space
@@ -36,7 +36,7 @@ let page_mask = 0b1111u8
 // 4096 >> 12 == 1
 // 8191 >> 12 == 1
 // 8192 >> 12 == 2
-let kernel_reserved_pages UInt64 = 4096u64
+let engine_reserved_pages UInt64 = 4096u64
 // == 16 megabytes
 // ^ this amount of memory cannot be allocated by user process
 // to avoid system crash on our of memory
@@ -46,7 +46,7 @@ class PhysicalAllocator {
 	// Approx. 1 megabyte per each 4 gigabyte of RAM
 	static var buffer ArrayPointer<UInt8> // TODO use bits, not bytes
 	static var count UInt64
-	static var countUser UInt64 // count - kernel_reserved_pages
+	static var countUser UInt64 // count - engine_reserved_pages
 	static var available UInt64
 	static var last UInt64
 	// TODO those fields must have ` = default`
@@ -64,7 +64,7 @@ class PhysicalAllocator {
 		buffer = params.physicalRamBitMaskVirtual as! ArrayPointer<UInt8>
 		let memoryMap UefiMemoryMap = params.efiMemoryMap.ref
 		count = down_bytes_to_pages(params.ramBytes)
-		countUser = count - kernel_reserved_pages
+		countUser = count - engine_reserved_pages
 		last = physical_not_found
 
 		memset(buffer, page_reserved, count)
@@ -183,12 +183,12 @@ class PhysicalAllocator {
 		return result
 	}
 
-	// Note: respects KERNEL_RESERVED_PAGES
+	// Note: respects ENGINE_RESERVED_PAGES
 	// TODO modify available
 	// TODO each process should have some private extra pages (1 megabyte)
 	// ^ means that available_now = (available - 1mb * process_count)
 	static fun allocateSafeUserspaceOnePagePreZeroed() UInt64 {
-		if available > kernel_reserved_pages {
+		if available > engine_reserved_pages {
 			return allocateOnePagePreZeroed()
 		}
 		return physical_not_found
@@ -279,7 +279,7 @@ class PhysicalAllocator {
 		// The idea is to use very fast wide search over bitmask
 		// too quickly find large chunks of memory
 		// for file caches
-		// and quickly deallocate if memory is not enough for apps/kernel
+		// and quickly deallocate if memory is not enough for apps/engine
 		// (maybe even in semi-automated way within this memory allocator)
 		// (another very small bitmask for disk caches?)
 		return allocatePages(down_bytes_to_pages(bytes) + 1u64)

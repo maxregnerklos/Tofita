@@ -35,7 +35,7 @@ class PageEntry {
 	/// R/W: RO if not set
 	// TODO RW causes #PF or #GPF?
 	// TODO The WP bit in CR0 determines if this is only applied to user land,
-	// always giving the kernel write access (the default) or both user land and the kernel
+	// always giving the engine write access (the default) or both user land and the engine
 	// (see Intel Manuals 3A 2-20)
 	@bits(1) var writeAllowed UInt8
 	// TODO can be just `Bool` cause booleans in Hexa are `uint8_t`
@@ -62,7 +62,7 @@ class PageEntry {
 
 	// TODO
 	/// G: Do not invalidate the TLB entry upon a MOV to CR3 instruction
-	/// Useful for pinning interrupt handlers and kernel memory
+	/// Useful for pinning interrupt handlers and engine memory
 	@bits(1) var global UInt8
 
 	/*
@@ -95,6 +95,6 @@ class PageEntry {
 
 	/// XD/NX-bit: Instructions are not allowed to be executed at addresses within the page
 	// TODO make it impossible to map executable memory in higher half after boot AT ALL!
-	// ^ map with EXEC in boot for kernel code and that's it
+	// ^ map with EXEC in boot for engine code and that's it
 	@bits(1) var disableExecution UInt8
 }

@@ -23,7 +23,7 @@ fun njraaCallHandled(@volatile process TofitaProcess, syscall TofitaSyscalls) Bo
 		// Also: could be locking virtual memory altering syscalls while handling them
 		// Anyway must guard the logic itself in probing, like returning optional null from probeForRead on fail
 
-		// TODO Note: temporal page must be kernel-only for read and write to avoid
+		// TODO Note: temporal page must be engine-only for read and write to avoid
 		// other user *threads* accessing it
 		// TODO if page is zero just step over to next instruction? except of conditional mov
 		if not probeForReadOkay(frame.rdxArg1, sizeOf<SwapWindowFramebufferPayload>()) {
@@ -35,7 +35,7 @@ fun njraaCallHandled(@volatile process TofitaProcess, syscall TofitaSyscalls) Bo
 		// TODO should copy from stack complete filled fb to this location
 		// TODO not that (ptr + size) should be saturating add, to not wrap around,
 		// cause otherwise it will be again under <lower and pass checks for
-		// user memory pointer validity, but be pointing at kernel memory
+		// user memory pointer validity, but be pointing at engine memory
 		if not probeForWriteOkay((payload.fb as! UInt64), sizeOf<WindowFramebuffer>()) {
 			return false
 		}
@@ -73,12 +73,12 @@ fun njraaCallHandled(@volatile process TofitaProcess, syscall TofitaSyscalls) Bo
 		}
 
 		//		if window != null {
-		//			var pixelsKernel = window.fbKernel.pixels
+		//			var pixelsEngine = window.fbEngine.pixels
 		//			var pixelsUser = window.fbUser.pixels
-		//			let count = window.fbKernel.width * window.fbKernel.height
+		//			let count = window.fbEngine.width * window.fbEngine.height
 		//			for i in count
 		//			{
-		//				pixelsKernel[i] = pixelsUser[i]
+		//				pixelsEngine[i] = pixelsUser[i]
 		//			}
 		//		} TODO dce
 

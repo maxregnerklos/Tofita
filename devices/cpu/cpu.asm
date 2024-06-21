@@ -56,8 +56,8 @@ enterUserMode:
 	jmp $
 	ret
 
-global enterKernelMode
-enterKernelMode:
+global enterEngineMode
+enterEngineMode:
 	cli
 
 	mov ax, SYS_DATA32_SEL
@@ -215,7 +215,7 @@ registerStorageSize equ (0x78 + 128)
 	add rsp, registerStorageSize
 %endmacro
 
-; TODO disabling this may disallow syscals from the kernel mode
+; TODO disabling this may disallow syscals from the engine mode
 ; but better perf? (except for yield)
 %macro swapGsIfRequired 0
 	mov rax, [rsp + InterruptFrame.cs]
@@ -383,16 +383,16 @@ guiThreadStart:
 	call guiThread_
 	; o64 call guiThread_ ; Alternatively
 
-extern kernelThread_
-global kernelThreadStart
-kernelThreadStart:
+extern engineThread_
+global engineThreadStart
+engineThreadStart:
 	push 0
 	push 0
 	push 0
 	push 0
 	mov rbp, rsp
-	call kernelThread_
-	; o64 call kernelThread_ ; Alternatively
+	call engineThread_
+	; o64 call engineThread_ ; Alternatively
 
 global portOutb
 portOutb:

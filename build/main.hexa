@@ -24,7 +24,7 @@ var cleanupTask = false
 var asmTask = false
 var efiTask = false
 var dllTask = false
-var kernelTask = false
+var engineTask = false
 var ramDiskTask = false
 var isoTask = false
 var useCpp = false
@@ -180,8 +180,8 @@ for task in tasks {
 			efiTask = true
 		case 'dll':
 			dllTask = true
-		case 'kernel':
-			kernelTask = true
+		case 'engine':
+			engineTask = true
 		case 'ramdisk':
 		//TODO ram-disk or assets
 			ramDiskTask = true
@@ -399,7 +399,7 @@ fun runTasks() {
 		buildDLLs('32', 'i686')
 	}
 
-	if kernelTask {
+	if engineTask {
 		// Hexa
 		phase1.push('cmd /c hexa --output-folder ' + folder + ' hexa.json')
 
@@ -430,7 +430,6 @@ fun runTasks() {
 				debuggie? '-fno-omit-frame-pointer' : '-fomit-frame-pointer',
 				'-ffast-math -ferror-limit=10',
 				'-w',
-				'-Ikernel/formats/stb_image/',
 				'-Wno-address-of-temporary',
 				debuggie? '-g' : '',
 				useCpp? '-x c++ -std=c++2a' : '-x c -std=gnu17',
@@ -446,7 +445,7 @@ fun runTasks() {
 				debuggie? '/debug:dwarf ' : '',
 				'/FIXED ', // Disable relocations
 				// Uncomment for some info '/verbose ',
-				'/WX /MACHINE:X64 /entry:kernelMain /SUBSYSTEM:CONSOLE ',
+				'/WX /MACHINE:X64 /entry:engineMain /SUBSYSTEM:CONSOLE ',
 				'/BASE:0xffff800000000000 ',
 				config.tempFolder + '/' + teaFolder + '/tofita.asm.obj ',
 				config.tempFolder + '/' + teaFolder + '/tofita.obj ',

@@ -135,11 +135,11 @@ fun resolveAddr(pml4entries ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64
 // TODO ^ same clang warning
 // TODO should accept usermode flag so shared memory and GDI buffers can be mapped out of user scope
 // ^ probably should be other way for WoW processes
-// TODO mapUserMemory and separate mapKernelMemory
+// TODO mapUserMemory and separate mapEngineMemory
 fun mapMemory(pml4entries ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64, pageCount UInt32, accessibleByUser Bool) {
 	serialPrintln("[paging] mapping memory range")
 
-	var virtualAddrEnd UInt64 = virtualAddr + pageCount * pageSize
+	let virtualAddrEnd UInt64 = virtualAddr + pageCount * pageSize
 
 	var vAddress UInt64 = virtualAddr
 	var pAddress UInt64 = physicalAddr
@@ -192,7 +192,7 @@ fun unmapAndFreeMemory(pml4entries PageEntry, virtualAddr UInt64, pageCount UInt
 // Upper half
 // Just makes a copy of upper half's PML4,
 // because it is always the same between processes
-fun copyKernelMemoryMap(pml4source ArrayPointer<ByValue<PageEntry>>, pml4destination ArrayPointer<ByValue<PageEntry>>) {
+fun copyEngineMemoryMap(pml4source ArrayPointer<ByValue<PageEntry>>, pml4destination ArrayPointer<ByValue<PageEntry>>) {
 	var i UInt32 = 255 // TODO validate that this is where upper half starts
 	let pageTableEntriesCount = 512u64
 
@@ -207,7 +207,7 @@ fun copyKernelMemoryMap(pml4source ArrayPointer<ByValue<PageEntry>>, pml4destina
 fun newCR3(pml4source ArrayPointer<ByValue<PageEntry>>) ArrayPointer<ByValue<PageEntry>> {
 	var pml4result = PhysicalAllocator.allocateOnePagePreZeroed() as! ArrayPointer<ByValue<PageEntry>>
 	if pml4result != null {
-		copyKernelMemoryMap(pml4source, pml4result)
+		copyEngineMemoryMap(pml4source, pml4result)
 	}
 	return pml4result
 }

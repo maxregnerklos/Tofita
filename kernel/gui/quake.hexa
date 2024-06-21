@@ -82,7 +82,7 @@ fun quakeHandleButtonDown(key UInt8) {
 			quakePrintf("GDT was additionally logged into serial output\n".utf16())
 		} else if quakeCommand == 'reboot' {
 			//quakePrintf("Doing hot reload. Note: this log may be persistent between hot reloads\n".utf16())
-			//var start InitKernel = upper as! InitKernel // TODO `= (InitKernel)` compiles
+			//var start InitEngine = upper as! InitEngine // TODO `= (InitEngine)` compiles
 			//start(paramsCache) // TODO pml4, stack
 		} else if quakeCommand == 'dark' { // TODO startsWith
 			// Dark theme
@@ -208,7 +208,7 @@ fun qsod(format ConstArrayPointer<ClangWideChar>, extra UInt64, more UInt64, oth
 	haveToQuake = true
 	quakePrintf("Engine stopped working. Please, reboot.\n".utf16())
 	quakePrintf(format, extra, more, other)
-	kernelThreadLoop()
+	engineThreadLoop()
 	// TODO reboot (to not having to print error message to screen)
 }
 
