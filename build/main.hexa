@@ -257,7 +257,7 @@ fun runTasks() {
 		// ENGINE
 		phase1.push(
 			nasm + (debuggie? ' -g' : '') + ' -f win64 -o ' +
-			folder + '\\tofita.asm.obj kernel\\all.asm'
+			folder + '\\tofita.asm.obj engine\\all.asm'
 		)
 
 		// SMP TRAPEZE
@@ -382,6 +382,7 @@ fun runTasks() {
 						// TODO -visibility=hidden -fno-underscoring check if `/kill-at` keeps `@` from `asm()`
 						link + ' ',
 						'/DLL /WX /MACHINE:X\(machine) ',
+						// TODO Hexa: use `deps.map`
 						[
 							for dep in deps[i] config.tempFolder + '/' + teaFolder + '/!' + dep + '.' + bit + '.lib '
 						].join(''),
