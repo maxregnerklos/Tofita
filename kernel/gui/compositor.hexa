@@ -641,8 +641,13 @@ fun requestAnimationFrame() {
 	haveToRender = true
 }
 
+var framesDone = 0
+var framesLast = 0
 fun composite(startupMilliseconds UInt64) {
 	// TODO `let currentSession = defaultSession` cache
+	framesDone++
+	let frameStart = uptimeMilliseconds
+
 	// Update rectangles
 	defaultSession.desktopZone.updateGlobalPositionsWithSelfAsOrigin()
 	defaultSession.taskbarZone.updateGlobalPositionsWithSelfAsOrigin()
@@ -1221,6 +1226,10 @@ fun composite(startupMilliseconds UInt64) {
 	if let hintText = ColliderRectangle.hintReady {
 		drawHint(hintText, ColliderRectangle.hintX, ColliderRectangle.hintY)
 	}
+
+	// Performance tracking
+	let frameTime = uptimeMilliseconds - frameStart
+	// TODO drawIntegerText(frameTime as! Int64, 102i16, 40i16, color.ref)
 
 	// HUD
 	quake()

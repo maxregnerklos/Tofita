@@ -177,6 +177,10 @@ fun timerInterruptHandler(@volatile frame InterruptFrame) {
 	// TODO divider to constant
 	// if timerCalled % 121 == 0 {
 	if timerCalled % 173 == 0 {
+		// Performance tracking
+		framesLast = framesDone
+		framesDone = 0
+
 		taskBarRedraw++
 		// TODO change to `requestAnimationFrame`
 		// Every N seconds
