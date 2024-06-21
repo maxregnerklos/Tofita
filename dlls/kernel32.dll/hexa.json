@@ -6,7 +6,7 @@
 	"license": "LGPL-3.0-only",
 	"global": [
 		"../types",
-		"../../kernel/syscalls/syscalls",
+		"../../engine/syscalls/syscalls",
 		"../tofita32.dll/tofita32.header",
 		"../ntdll.dll/ntdll.header",
 		"kernel32.header",

@@ -11,12 +11,12 @@
 		"shared/paging",
 		"../devices/serial/init",
 		"../devices/serial/log",
-		"../kernel/ramdisk",
+		"../engine/ramDisk",
 		"uefi",
 		"uefi/boot",
 		"uefi/memory",
 		"uefi/pe",
-		"uefi/ramdiskLoader",
+		"uefi/ramDiskLoader",
 		"uefi/visuals"
 	],
 	"targets": [
