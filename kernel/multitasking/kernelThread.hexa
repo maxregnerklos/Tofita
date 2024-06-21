@@ -99,7 +99,7 @@ fun engineThread() {
 						// TODO rename to canBeScheduled
 						process.schedulable = true
 					} else if syscall == TofitaSyscalls.ExitProcess {
-						serialPrintf("[[ExitProcess:PID %d]] %d\n", index, frame.rdxArg1)
+						serialPrintf("[[ExitProcess:PID %d '%S']] with code %d\n", index, process.name.utf16(), frame.rdxArg1)
 						process.present = false
 
 						// Select pml4 of idle process for safety
