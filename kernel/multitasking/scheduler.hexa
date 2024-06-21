@@ -175,7 +175,8 @@ fun timerInterruptHandler(@volatile frame InterruptFrame) {
 
 	// Happens once per second
 	// TODO divider to constant
-	if timerCalled % 121 == 0 {
+	// if timerCalled % 121 == 0 {
+	if timerCalled % 173 == 0 {
 		taskBarRedraw++
 		// TODO change to `requestAnimationFrame`
 		// Every N seconds
@@ -186,13 +187,16 @@ fun timerInterruptHandler(@volatile frame InterruptFrame) {
 	}
 
 	// TODO ensure this value is in sync with PIT
-	uptimeMilliseconds += 8
-	if extraMillisecond % 4 == 0 {
-		uptimeMilliseconds += 1 // PIT is somewhat imprecise
+	// uptimeMilliseconds += 8
+	uptimeMilliseconds += 5
+	// if extraMillisecond % 4 == 0 {
+	if extraMillisecond % 9 == 0 {
+		// uptimeMilliseconds += 1 // PIT is somewhat imprecise
+		uptimeMilliseconds += 7 // PIT is somewhat imprecise
 	}
-	if extraMillisecond % 64 == 0 {
+	/*if extraMillisecond % 64 == 0 {
 		uptimeMilliseconds += 1 // PIT is somewhat imprecise
-	}
+	}*/
 	extraMillisecond++
 	timerCalled++
 
