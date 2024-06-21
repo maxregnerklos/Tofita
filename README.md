@@ -1,6 +1,6 @@
 # Tofita
 
-![Tofita Logo](docs/logo.png?raw=true)
+[![Tofita Logo](docs/logo.png?raw=true)](https://github.com/sponsors/PeyTy)
 
 All-new engine to-fit-a [Greentea OS](https://github.com/GreenteaOS) (hence "Tofita")
 
@@ -11,7 +11,7 @@ All-new engine to-fit-a [Greentea OS](https://github.com/GreenteaOS) (hence "Tof
 [![Automatic Builds](https://img.shields.io/badge/Get-Builds-ff69b4.svg?style=flat)](https://ci.appveyor.com/project/PeyTy/tofita/build/artifacts)
 [![Made with Hexa](https://img.shields.io/badge/Code-Hexa-FF7F50.svg?style=flat)](https://github.com/hexalang/hexa)
 
-Greentea OS is aimed to provide complete operating system [compatible with existing apps](https://github.com/GreenteaOS/Greentea#compatibility-goals)
+Greentea OS is aimed to provide complete operating system [compatible with existing apps, games and drivers](https://github.com/GreenteaOS/Greentea#compatibility-goals)
 
 ![Screenshot](https://raw.githubusercontent.com/GreenteaOS/Greentea/kawaii/Images/screenshot.jpg)
 
@@ -31,6 +31,16 @@ Give some attention for Greentea OS be noticed and attract more contributors, th
 [![Become a patron](docs/patreon.png?raw=true)](https://www.patreon.com/PeyTy)
 
 Become a sponsor to help us hire developers and test more hardware
+
+## Made with Hexa
+
+<img align="left" width="96px" height="96px" src="https://hexalang.github.io/favicon/apple-icon.png" />
+
+This project is made with [Hexa programming language](https://github.com/hexalang)
+
+> [!NOTE]
+>
+> Learn more at [hexalang.github.io](https://hexalang.github.io)
 
 ## Tools
 
