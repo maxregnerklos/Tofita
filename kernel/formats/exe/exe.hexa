@@ -68,7 +68,18 @@ fun is64Exe(asset RamDiskAsset) {
 	return peOptionalHeader.magic == 0x020B
 }
 
+// TODO AlignValueUpTests by Joachim Bauch
+// rsrc
+// Search for function names should be case sensitive
 // TODO access all memory safely via Buffer or something
+// TODO improve to not have that SIZE part
+// TODO <HEADER PeOptionalHeader> limit
+// type LIMIT is UInt64 or UInt32 /*concept limit*/
+// class PeOptionalHeader<LIMIT> {}
+// @require(T is UInt64 or UInt32) type LIMIT<T> = _
+// class PeOptionalHeader<LIMIT UInt64 or UInt32> {}
+// @require(SIZE is UInt64 or UInt32) <- same for optional fields
+// @optionalValidate(SIZE is UInt64, flag: 'is64'); @enableIf('is64') fun
 class ExeLoader<SIZE, HEADER> {
 	new() {}
 
@@ -130,6 +141,7 @@ class ExeLoader<SIZE, HEADER> {
 		)
 
 		let buffer UInt64 = exec.nextBase
+		serialPrintf("[loadDLL] PE mapped at %8\n", buffer)
 		memset(buffer as! ArrayPointer<UInt8>, 0, peOptionalHeader.sizeOfImage) // Zeroing
 
 		exec.nextBase = exec.nextBase + pages * pageSize
@@ -602,6 +614,8 @@ class ExeLoader<SIZE, HEADER> {
 		process.frame.ip = ntdll.entry // Contains crt0
 		process.frame.sp = app.stackVirtual
 		process.frame.rcxArg0 = whereStartup // First argument
+		//process.frame.rcxArg0 = app.pei.entry // First argument
+		//process.frame.r8 = whereEntries // Third argument
 		// TODO merge all to one argument (single structure)
 		// TODO unMap zero page to cause NPE
 	}
