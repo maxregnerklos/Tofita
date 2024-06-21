@@ -35,6 +35,14 @@ fun engineInit(params UefiPayload) {
 	// TODO `anyPtrOrObj as! UInt32` -> error precision lost on 64-bit
 	paramsCache = params
 	PhysicalAllocator.init(params)
+
+	// TODO
+	// let available = PhysicalAllocator.getAvailablePages() * 4096
+	// uint32_t megs = Math::round((double)params->ramBytes / (1024.0 * 1024.0));
+	// uint32_t availableMegs = Math::round((double)available / (1024.0 * 1024.0));
+	// quakePrintf(L"[CPU] %s %s %d MB RAM (%d MB usable)\n", cpuid.vendorID, cpuid.brandName, megs,
+	//			availableMegs);
+
 	// Ensure to allocate within 1 MB
 	PhysicalAllocator.resetCounter()
 	let trapezePadding = PhysicalAllocator.allocateOnePage()
@@ -243,23 +251,41 @@ fun engineInit(params UefiPayload) {
 		pml4engineThread = processes[0].pml4
 	}
 
-	// GUI
+	// Autoruns
 	// TODO should be done at main thread
 	// TODO use some kind of autorun.ini/.bat asset
-	if true {
-		for i in 3
+	if false {
+		for i in 4
 		{
+			if i == 0 {
+				continue
+			}
+
 			let guiProcess TofitaProcess = processCreate() // TODO just `new` and no `@struct`
 			serialPrintf("<Tofita> GUI process ID == %u\n", guiProcess.pid)
 			processInit(guiProcess)
 			disableSerial = 1
 			// TODO `@defer disableSerial = 0` <- `@` must have the lowest priority?
 			if i == 1 {
-				loadExeIntoProcess("desktop/wndapp32.exe", guiProcess)
-				guiProcess.name = "wndapp32.exe"
-			} else {
-				loadExeIntoProcess("desktop/wndapp.exe", guiProcess)
-				guiProcess.name = "wndapp.exe"
+				loadExeIntoProcess("desktop/demo32.exe", guiProcess)
+				guiProcess.name = "demo32.exe"
+			}
+
+			if i == 2 {
+				loadExeIntoProcess("desktop/demo64.exe", guiProcess)
+				guiProcess.name = "demo64.exe"
+			}
+
+			if i == 3 {
+				loadExeIntoProcess("desktop/calc64.exe", guiProcess)
+				guiProcess.name = "=== calc64.exe ==="
+			}
+
+			if i == 4 {
+				loadExeIntoProcess("desktop/calc64.exe", guiProcess)
+				//loadExeIntoProcess("desktop/calc32.exe", guiProcess)
+				guiProcess.name = "calc32.exe"
+				guiProcess.name = "calc64.exe"
 			}
 
 			disableSerial = 0
