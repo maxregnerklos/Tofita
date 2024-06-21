@@ -160,6 +160,11 @@ class Viewer {
 				x - leaves16.width / 2i16,
 				y - leaves16.height / 2i16
 			)
+			drawBitmap32WithAlpha(
+				leaves16white,
+				x + 2 - leaves16.width / 2i16,
+				y + 2 - leaves16.height / 2i16
+			)
 
 			requestAnimationFrame()
 		}

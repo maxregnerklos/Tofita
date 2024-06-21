@@ -52,6 +52,7 @@ class TofitaProcess {
 	// oh probably
 
 	// Ring buffer
+	// TODO linked list of 255 messages upto 10k limit or so
 	var messages [Msg]
 	var messagesUsed UInt64
 	var awaitsGetMessage Bool

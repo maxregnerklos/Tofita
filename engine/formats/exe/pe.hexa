@@ -64,6 +64,7 @@ class Pe64OptionalHeader {
 
 // 1 byte aligned
 @struct @packed
+// TODO Hexa: <is64 Bool>
 class Pe32OptionalHeader {
 	var magic UInt16 // 0x010b - PE32, 0x020b - PE32+ (64 bit)
 	var majorLinkerVersion UInt8
@@ -73,6 +74,7 @@ class Pe32OptionalHeader {
 	var sizeOfUninitializedData UInt32
 	var addressOfEntryPoint UInt32
 	var baseOfCode UInt32
+	// TODO Hexa: @enableIf()
 	var baseOfData UInt32 // present only in 32-bit
 	var imageBase UInt32
 	var sectionAlignment UInt32
