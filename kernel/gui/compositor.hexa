@@ -24,6 +24,7 @@ var vibranceLight Bitmap32 = null // Size of framebuffer
 var vibranceDark Bitmap32 = null // Size of framebuffer
 var leaves Bitmap32 = null
 var leaves16 Bitmap32 = null
+var leaves16white Bitmap32 = null
 var trashCan Bitmap32 = null
 var notepad16 Bitmap32 = null
 var notepad48 Bitmap32 = null
@@ -308,6 +309,10 @@ fun initializeCompositor() {
 	let a = new RamDiskAsset()
 	getRamDiskAsset(a, "root/Windows/Resources/Icons/leaves16.png")
 	leaves16 = loadPng32(a)
+
+	let a = new RamDiskAsset()
+	getRamDiskAsset(a, "root/Windows/Resources/Icons/leaves16white.png")
+	leaves16white = loadPng32(a)
 
 	// Tray
 
@@ -661,9 +666,8 @@ fun composite(startupMilliseconds UInt64) {
 
 	// TODO not inferred properly?
 	// for file in desktopFilesList as! [String] {
-	for i in desktopShortcuts.length {
+	for shortcut in desktopShortcuts {
 		// TODO Hexa: `let file = desktopFilesList[i]` [ ] must return T? not T
-		let shortcut = desktopShortcuts[i]
 		let xu = shortcut.rectangle.relativeX
 		let yu = shortcut.rectangle.relativeY
 
@@ -970,6 +974,11 @@ fun composite(startupMilliseconds UInt64) {
 			(defaultSession.popupZone.width / 2i16) - (w / 2i16) : 0i16
 		// Gap above taskbar in centered mode
 		let y = taskbarY - h - (Theme.centeredStart? 12i16 : 0i16)
+
+		if Theme.startShadow {
+			drawShadowBox(x, y, w, h)
+		}
+
 		drawVibrancedRectangle(x, y as! Int16, w, h, darkTheme)
 		// TODO probably `w - 2` to avoid some overdraw?
 		color.ref.color = 0x44444444u32
@@ -1011,6 +1020,8 @@ fun composite(startupMilliseconds UInt64) {
 			defaultSession.startPower.height = userPanelHeight
 
 			// Pins panel
+			// Avoid clip rect: just render center part of vibrance, icons, and other vibrance parts over those icon parts
+			// That's why we render the pins upfront
 			{
 				defaultSession.startPins.relativeY = userPanelHeight
 				defaultSession.startPins.width = defaultSession.startZone.width

@@ -16,7 +16,7 @@
 // Quake-style console with ~
 // TODO change to `Start + ~` and change engine to cmd.exe + tabs etc
 
-var quakeHeight UInt8 = 255 // TODO `256` better error message aka too large to fit
+let quakeHeight UInt8 = 255 // TODO Hexa: `256` better error message aka too large to fit into u8
 var quakeCommand String = ""
 var quakePreviousCommand String = "help"
 // `var quakeLines [String] = [0]` // TODO `= [0]` not valid type
@@ -159,6 +159,7 @@ fun quakeHandleButtonDown(key UInt8) {
 			quakePrintf("wallpaper - set alternative wallpaper\n".utf16())
 			quakePrintf("fast - faster screen rendering method\n".utf16())
 			quakePrintf("huge - large taskbar without labels\n".utf16())
+			// TODO quakePrintf("wallpaper - cycle wallpapers\n".utf16())//note this may crash compositor, in composite() check last!=new and load on demand
 			// TODO ACPI reboot quakePrintf("Enter 're' or 'reboot' to reboot the system\n".utf16())
 			// TODO ACPI power off quakePrintf("Enter 'po' or 'power' to shut down the system\n".utf16())
 			quakePrintf("Press UP to re-enter the last command\n".utf16())//

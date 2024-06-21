@@ -84,6 +84,7 @@ class Files {
 			shortcut.icon = unknown48
 			let rectangle = new ColliderRectangle(0, startPinHandler) // TODO
 			shortcut.rectangle = rectangle
+			// TODO Hexa: must error! shortcut.rectangle.hint = shortcut.displayName
 			shortcuts.push(shortcut)
 			zone.children.push(rectangle)
 			// TODO shortcut.rectangle.hint = hintOfPin
@@ -209,6 +210,14 @@ class Files {
 		Screen.width = screenWidth
 		Screen.height = screenHeight
 		Screen.pixels = screenPixels
+	}
+
+	static fun hintOfFile(id UInt64) String {
+		//let key = "HKCR\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\Instance\{" + id.toString() + "}\TaskbarInfo"
+		//let taskbarInfo = readRegistryKey(key)
+		// TODO Hexa: if taskbarInfo.isNull { return "" }
+		//return String.fromWideString(taskbarInfo.ref.data)
+		return ''
 	}
 
 	static fun guessIcon(shortcut Shortcut) Void {

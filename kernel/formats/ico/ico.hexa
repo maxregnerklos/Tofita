@@ -86,7 +86,7 @@ fun loadIcon(buffer ConstArrayPointer<UInt8>, width Int) Bitmap32 {
 		bits: buffer[best + 6] + buffer[best + 7] * 0xFF,
 		pixels: null
 	}
-	*/
+	*/ // TODO Hexa: sublime comment
 
 	let planes = buffer[best + 4] + buffer[best + 5] * 0xFF
 	let bits = buffer[best + 6] + buffer[best + 7] * 0xFF

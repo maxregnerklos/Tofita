@@ -57,9 +57,13 @@ class ColliderRectangle {
 	// TODO `@capture(closure: true)`
 	var handler (id UInt64, event ColliderEventType) => Void // TODO `let`
 
+	// TODO just pass ColliderRectangle instead of `id` everywhere
+
 	/// Set this to `null` to indicate lack of hint, or function that lazily updates hint content
 	var hint (id UInt64) => String = null // TODO Hexa: nullable function type... `varName @nullable ()=>T`
 	// ^ `Null<(id UInt64) => String>`
+	// or `Function<UInt64, String>?` thus can de dup in code gen with the same ClassInstance...
+	// but no field names? `<@name('id') UInt64>` `<id UInt64>`
 	// TODO hint within screen bounds and under/above mouse
 	static var showHintAfter UInt64 = 0
 	static var showHint (id UInt64) => String = null

@@ -20,6 +20,8 @@ class Theme {
 	/// Fast composition with special CPU instructions
 	static var fast = true
 
+	static var startShadow = true
+
 	static var hugeTaskbar = false
 
 	new () {}

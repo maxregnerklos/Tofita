@@ -545,8 +545,9 @@ fun hintOfFile(id UInt64) String {
 	let asset = new RamDiskAsset()
 	getRamDiskAsset(asset, shortcut.file)
 
-	if asset.data != null {
+	if asset.data != null/* TODO , asset.data.length > 0 */ {
 		// TODO more + comma separators
+		// TODO folder size 1 depth + `or more` / `and 5 nested folders`
 		return "Size: " + asset.size + " bytes"
 	}
 
@@ -573,6 +574,7 @@ fun hintOfPin(id UInt64) String {
 }
 
 fun hintOfTaskbar(id UInt64) String {
+	// TODO Hexa: `switch id { case (defaultSession.taskbarStart.id): return "Start" }`
 	if defaultSession.taskbarStart.id == id {
 		return "Start"
 	}
@@ -583,6 +585,22 @@ fun hintOfTaskbar(id UInt64) String {
 
 	if defaultSession.taskbarPin.id == id {
 		return "Pinned items"
+	}
+
+	if defaultSession.taskbarDesktopPeek.id == id {
+		return "Peek desktop"
+	}
+
+	if defaultSession.taskbarTime.id == id {
+		return "Clock"
+	}
+
+	if defaultSession.taskbarInput.id == id {
+		return "Keyboard"
+	}
+
+	if defaultSession.taskbarSearch.id == id {
+		return "Search"
 	}
 
 	// TODO taskbarDesktopPeek
