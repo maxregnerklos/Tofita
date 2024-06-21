@@ -643,6 +643,11 @@ fun requestAnimationFrame() {
 
 fun composite(startupMilliseconds UInt64) {
 	// TODO `let currentSession = defaultSession` cache
+	// Update rectangles
+	defaultSession.desktopZone.updateGlobalPositionsWithSelfAsOrigin()
+	defaultSession.taskbarZone.updateGlobalPositionsWithSelfAsOrigin()
+	defaultSession.windowsZone.updateGlobalPositionsWithSelfAsOrigin()
+
 	let mouseX = mouseX
 	let mouseY = mouseY
 

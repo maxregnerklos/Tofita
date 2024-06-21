@@ -24,6 +24,24 @@ enum ColliderEventType : UInt8 {
 	DragStop = 6
 }
 
+// TODO Concept
+enum ColliderEventAxis : UInt8 {
+	/// Left mouse button
+	Left
+
+	/// Right mouse button
+	Right
+
+	/// Scroll button
+	Middle
+
+	/// Scroll UP
+	Up
+
+	/// Scroll DOWN
+	Down
+}
+
 enum ColliderState : UInt8 {
 	Default = 0
 	Hover = 1
@@ -33,6 +51,7 @@ enum ColliderState : UInt8 {
 	Drag = 2
 }
 
+// TODO rename to just Collider, and .rectangle to .shape
 class ColliderRectangle {
 	var enabled Bool = true
 	/// Disable for simple container
@@ -75,6 +94,13 @@ class ColliderRectangle {
 	// TODO Hexa: instead of `= 0` ensure init by {}
 	var relativeX Int16 = 0
 	var relativeY Int16 = 0
+
+	// TODO Concept
+	/// Global X position, use to render on screen, update with `updateGlobalPositions(...)`
+	var globalX Int16 = 0
+	/// Global Y position, use to render on screen, update with `updateGlobalPositions(...)`
+	var globalY Int16 = 0
+
 	var width Int16 = 0
 	var height Int16 = 0
 	// TODO track mouse enter-exit and roll-over
@@ -117,6 +143,16 @@ class ColliderRectangle {
 			relY <= (relativeY + height) and
 			enabled
 	}
+
+	// TODO Concept
+	// fun collidesWithBox(relX Int16, relY Int16, w Int16, h Int16) {
+	// 	return
+	// 		relX >= relativeX and
+	// 		relY >= relativeY and
+	// 		relX <= (relativeX + width) and
+	// 		relY <= (relativeY + height) and
+	// 		enabled
+	// }
 
 	static fun rectanglesIntersect(
 		minAx Int16, minAy Int16, maxAx Int16, maxAy Int16,
@@ -254,5 +290,16 @@ class ColliderRectangle {
 		}
 
 		hintReady = null
+	}
+
+	// TODO Concept
+	fun updateGlobalPositions(originX Int16, originY Int16) Void {
+		globalX = originX + relativeX
+		globalY = originY + relativeY
+		// TODO
+	}
+
+	fun updateGlobalPositionsWithSelfAsOrigin() Void {
+		updateGlobalPositions(relativeX, relativeY)
 	}
 }
