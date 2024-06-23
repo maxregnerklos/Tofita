@@ -33,14 +33,14 @@ var useCpp = false
 // Removes folder recursively
 fun deleteFolderRecursive(path, noRemoveSelf Bool = false) {
 	if fs.existsSync(path) {
-		fs.readdirSync(path).forEach(fun(file, index) {
-			let curPath = path + "\\" + file
-			if fs.lstatSync(curPath).isDirectory() {
-				deleteFolderRecursive(curPath)
-			} else {
-				fs.unlinkSync(curPath)
-			}
-		})
+		fs.readdirSync(path).forEach(fun (file, index) {
+				let curPath = path + "\\" + file
+				if fs.lstatSync(curPath).isDirectory() {
+					deleteFolderRecursive(curPath)
+				} else {
+					fs.unlinkSync(curPath)
+				}
+			})
 		// Fixes some random errors
 		if noRemoveSelf != true {
 			// fs.rmdirSync(path)
@@ -122,16 +122,16 @@ for task in ['tasks'] {
 
 				fun formatFolderRecursive(path) {
 					if fs.existsSync(path) {
-						fs.readdirSync(path).forEach(fun(file, index) {
-							let curPath = path + "\\" + file
-							if fs.lstatSync(curPath).isDirectory() {
-								formatFolderRecursive(curPath)
-							} else {
-								if curPath.indexOf('external\\') == -1, curPath.endsWith('.c') or curPath.endsWith('.hpp') {
-									files.push(curPath)
+						fs.readdirSync(path).forEach(fun (file, index) {
+								let curPath = path + "\\" + file
+								if fs.lstatSync(curPath).isDirectory() {
+									formatFolderRecursive(curPath)
+								} else {
+									if curPath.indexOf('external\\') == -1, curPath.endsWith('.c') or curPath.endsWith('.hpp') {
+										files.push(curPath)
+									}
 								}
-							}
-						})
+							})
 					}
 				}
 
@@ -183,13 +183,13 @@ for task in tasks {
 		case 'engine':
 			engineTask = true
 		case 'ramdisk':
-		//TODO ram-disk or assets
+			//TODO ram-disk or assets
 			ramDiskTask = true
 		case 'iso':
 			isoTask = true
 		case 'risc64': // TODO
 		case 'arm64':
-		// TODO
+			// TODO
 			// TODO disallow doc comment on non expr
 			{
 				/// TODO like this one
@@ -256,7 +256,7 @@ fun runTasks() {
 
 		// ENGINE
 		phase1.push(
-			nasm + (debuggie? ' -g' : '') + ' -f win64 -o ' +
+			nasm + (debuggie ? ' -g': '') + ' -f win64 -o ' +
 			folder + '\\tofita.asm.obj engine\\all.asm'
 		)
 
@@ -287,7 +287,7 @@ fun runTasks() {
 			[
 				clang + ' ',
 				'-target x86_64-pc-win32-coff -fno-stack-protector',
-				useCpp? '-x c++ -std=c++2a' : '-x c -std=gnu17',
+				useCpp ? '-x c++ -std=c++2a': '-x c -std=gnu17',
 				'-fshort-wchar -mno-red-zone -w',
 				'-fomit-frame-pointer',
 				'-D versionRolling=' + versionRolling, // TODO used?
@@ -365,7 +365,7 @@ fun runTasks() {
 						'-msse -msse2 -msse3 -mpopcnt -mcx16 -msahf -mprfchw',
 						'-mno-ssse3 -mno-sse4a -mno-sse4.1 -mno-sse4.2 -mno-sse4', // Unsupported by some targeted CPUs
 						// TODO useCpp, fix C build
-						useCpp? '-x c++ -std=c++2a' : '-x c -std=gnu17',
+						useCpp ? '-x c++ -std=c++2a': '-x c -std=gnu17',
 						'-fomit-frame-pointer',
 						folder + '\\' + dlls[i] + '.' + bit + '.c',
 						'-o',
@@ -374,7 +374,7 @@ fun runTasks() {
 				)
 
 				// 32 bit is `86`
-				let machine = (bit == '32') ? '86' : '64'
+				let machine = (bit == '32') ? '86': '64'
 
 				// Note: this is also depends on `asm`
 				phase3.push(
@@ -416,7 +416,7 @@ fun runTasks() {
 
 				'-mtune=nocona -fno-stack-protector -fshort-wchar -mno-red-zone ',
 				'-fno-stack-check ',
-				debuggie? '-fvisibility=default' : '-fvisibility=hidden',
+				debuggie ? '-fvisibility=default': '-fvisibility=hidden',
 				'-Dbit64',
 				'-DHEXA_NO_PLATFORM_INCLUDES',
 				'-fno-rtti -fno-exceptions -ffreestanding ',
@@ -428,12 +428,12 @@ fun runTasks() {
 				warn,
 				'-Wno-incompatible-library-redeclaration -Wno-absolute-value -Wimplicit-function-declaration ',
 				optimizationFeatures,
-				debuggie? '-fno-omit-frame-pointer' : '-fomit-frame-pointer',
 				'-ffast-math -ferror-limit=10',
 				'-w',
+				debuggie ? '-fno-omit-frame-pointer': '-fomit-frame-pointer',
 				'-Wno-address-of-temporary',
-				debuggie? '-g' : '',
-				useCpp? '-x c++ -std=c++2a' : '-x c -std=gnu17',
+				debuggie ? '-g': '',
+				useCpp ? '-x c++ -std=c++2a': '-x c -std=gnu17',
 				'-c ' + config.tempFolder + '/' + teaFolder + '/tofita.c -o ',
 				config.tempFolder + '/' + teaFolder + '/tofita.obj '
 			].join(' ')
@@ -443,7 +443,7 @@ fun runTasks() {
 		phase3.push(
 			[
 				link + ' ',
-				debuggie? '/debug:dwarf ' : '',
+				debuggie ? '/debug:dwarf ': '',
 				'/FIXED ', // Disable relocations
 				// Uncomment for some info '/verbose ',
 				'/WX /MACHINE:X64 /entry:engineMain /SUBSYSTEM:CONSOLE ',
@@ -493,9 +493,9 @@ fun runTasks() {
 		let cmd = currentWave.shift()
 
 		if let cmd = cmd {
-			child_process.exec(cmd, fun(error Bool?, stdout String, stderr String) {
 				if error != null {
-					console.log('[Build error] ' + cmd)
+			child_process.exec(cmd, fun (error Bool?, stdout String, stderr String) {
+						console.log('[Build error] ' + cmd)
 					if '' != '' + stdout {
 						console.log(stdout)
 					}
@@ -511,9 +511,9 @@ fun runTasks() {
 					console.log(stdout)
 				}
 
-				busy--
-				evaluate()
-			})
+					busy--
+					evaluate()
+				})
 
 			busy++
 
@@ -583,11 +583,11 @@ fun runTasks() {
 			// Debuggers should catch .hexa files
 			if not debuggie {
 				let path = folder
-				fs.readdirSync(path).forEach(fun(file, index) {
-					if file.endsWith('.c') {
-						fs.unlinkSync(path + '\\' + file)
-					}
-				})
+				fs.readdirSync(path).forEach(fun (file, index) {
+						if file.endsWith('.c') {
+							fs.unlinkSync(path + '\\' + file)
+						}
+					})
 			}
 
 			console.log("[All tasks finished in \(Date.now() - begin) ms, upto \(maxBusy) parallel tasks performed]")
