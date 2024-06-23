@@ -20,7 +20,7 @@
 //
 
 let defaultReserveMegabytes = #if bit64 4096u16 #else 128u16 #end
-let reserveAtVirtualMegabyte = #if bit64 4096*4096*4 #else (4096/4)*3 - (defaultReserveMegabytes*2) #end
+let reserveAtVirtualMegabyte = #if bit64 4096 * 4096 * 4 #else(4096 / 4) * 3 - (defaultReserveMegabytes * 2) #end
 
 fun reserveIgnore(megabytes UInt16) {
 	// Nothing, already did reserve
@@ -31,6 +31,7 @@ fun reserve(megabytes UInt16) {
 	// TODO
 	wrapReserve = reserveIgnore
 	wrapAllocate = allocate
+	// TODO wrapFree = free
 }
 
 fun allocate(size UInt32) #if bit64 UInt64 #else UInt32 #end {
@@ -42,6 +43,10 @@ fun allocateFirst(size UInt32) #if bit64 UInt64 #else UInt32 #end {
 	reserve(defaultReserveMegabytes)
 	return allocate(size)
 }
+
+// fun free(pointer UInt64, size UInt32) {
+// // TODO
+// }
 
 fun freeStub(pointer UInt64, size UInt32) {
 	// Nothing, not yet ready
@@ -98,28 +103,28 @@ fun tofitaStdStub(arg ConstArrayPointer<UInt8>) UInt32 {
 // External
 @emitHeader
 #if bit64
-@linkName('tofitaFastSystemCallWrapper')
+	@linkName('tofitaFastSystemCallWrapper')
 #else
-// Expected convention by assembly
-@convention('fastcall')
-@linkName('@tofitaFastSystemCallWrapper@8')
+	// Expected convention by assembly
+	@convention('fastcall')
+	@linkName('@tofitaFastSystemCallWrapper@8')
 #end
 declare fun tofitaFastSystemCallWrapper(rcx TofitaSyscalls, rdx #if bit64 UInt64 #else UInt32 #end) #if bit64 UInt64 #else UInt32 #end
 
 // Return value is placed into RAX
 // Only ecx/edx available in x86-32 fastcall, so use rcx/rdx pair only
 #if bit64
-@dllExport('tofitaFastSystemCall')
-@fastcall // TODO same for 32bit?
+	@dllExport('tofitaFastSystemCall')
+	@fastcall // TODO same for 32bit?
 #else
-@dllExport('@tofitaFastSystemCall@8')
+	@dllExport('@tofitaFastSystemCall@8')
 #end
 fun tofitaFastSystemCall(rcx TofitaSyscalls,
-#if bit64
-	rdx UInt64 = 0
-#else
-	rdx UInt32 = 0
-#end
+	#if bit64
+		rdx UInt64 = 0
+	#else
+		rdx UInt32 = 0
+	#end
 ) #if bit64 UInt64 #else UInt32 #end
 // TODO bit64 or bits64?
 {
@@ -136,6 +141,7 @@ fun tofitaExitProcess(exitCode UInt32) Void {
 }
 
 @dllExport('tofitaDebugLog')
+// TODO @rename('tofitaDebugLog')
 fun tofitaDebugLog(message ConstArrayPointer<ClangWideChar>, extra UInt64 = 0, more UInt64 = 0) Void {
 	let payload = new ByValue<DebugLogPayload>()
 	// TODO @stack

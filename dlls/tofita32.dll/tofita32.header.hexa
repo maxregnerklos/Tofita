@@ -29,6 +29,8 @@ declare fun tofitaFastSystemCall(rcx TofitaSyscalls,
 // TODO link name + dll import
 @fastcall declare fun tofitaFastStub(rcx UInt64, rdx UInt64) UInt32
 @stdcall declare fun tofitaStdStub(arg ConstArrayPointer<UInt8>) UInt32
+
+// TODO @convention('fastcall')
 @dllImport @linkAsIs
 declare fun tofitaDebugLog(message ConstArrayPointer<ClangWideChar>, extra UInt64 = 0, more UInt64 = 0) Void
 
