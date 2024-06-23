@@ -85,6 +85,7 @@ Download or clone [Teapot repo](https://github.com/GreenteaOS/Teapot#download-la
 .\Greentea
 .\Tongue
 .\NjRAA
+.\Caramel
 ```
 
 You should have extracted `Teapot-kawaii` and have folders like this `.\Teapot\LLVM-*.*.*`.
