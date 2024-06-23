@@ -32,7 +32,9 @@ let dlls = [
 	'comctl32',
 	'shell32',
 	'msvcrt',
-	'advapi32'
+	'advapi32',
+	// Non-Caramel Native API
+	'tofita32'
 ]
 
 let deps [[String]] = [
@@ -43,13 +45,14 @@ let deps [[String]] = [
 	['ntdll', 'kernel32'],
 	['ntdll', 'kernel32'],
 	['ntdll', 'kernel32'],
-	['ntdll', 'kernel32']
+	['ntdll', 'kernel32'],
+	[]
 ]
 
 fun packFonts(config Config) {
 	let fs = require('fs')
 	let chars [{ code: Int, x: Int, y: Int, width: Float }] =
-	JSON.parse(fs.readFileSync('..\\Tongue\\fonts\\bitmap\\ascii.json').toString().trim())
+		JSON.parse(fs.readFileSync('..\\Tongue\\fonts\\bitmap\\ascii.json').toString().trim())
 
 	let charSize = 2 + 2 + 8
 	let size = 256 * charSize // Just ASCII for now
@@ -112,7 +115,7 @@ fun packAssets(config Config) {
 			let filesList [String] = []
 
 			// Hexa: hl fun() too
-			fs.readdirSync(path).forEach(fun(file, index) {
+			fs.readdirSync(path).forEach(fun (file, index) {
 					let curPath = path + "\\" + file
 					let assetFullName = curPath.substr('../Greentea/assets/'.length).split('\\').join('/')
 
@@ -151,7 +154,6 @@ fun packAssets(config Config) {
 	ramDiskSize += 4 // UInt32 ramDiskChecksum
 	ramDiskSize += 4 // UInt32 ramDiskSize
 	ramDiskSize += 4 // UInt32 assetsCount
-	ramDiskSize += (//struct assetDefinition
 		//{
 		256 + //	var path[256] UInt8
 		4 + //	    UInt32 size
@@ -159,6 +161,7 @@ fun packAssets(config Config) {
 		//}
 	) *(assetName.length + folderCount)
 	//uint8_t* data
+	ramDiskSize += (// struct assetDefinition
 
 	// Round upto 4 bytes
 	ramDiskSize = Math.ceil(ramDiskSize / 4) * 4

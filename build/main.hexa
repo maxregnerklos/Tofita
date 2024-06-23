@@ -183,14 +183,13 @@ for task in tasks {
 		case 'engine':
 			engineTask = true
 		case 'ramdisk':
-			//TODO ram-disk or assets
+			// TODO ram-disk or assets
 			ramDiskTask = true
 		case 'iso':
 			isoTask = true
 		case 'risc64': // TODO
-		case 'arm64':
-			// TODO
-			// TODO disallow doc comment on non expr
+		case 'arm64': // TODO
+			// TODO Hexa: disallow doc comment on non expr
 			{
 				/// TODO like this one
 			}
@@ -339,7 +338,7 @@ fun runTasks() {
 
 				// TODO refactor
 				var asm = ' '
-				if dlls[i] == 'ntdll' {
+				if dlls[i] == 'ntdll' or dlls[i] == 'tofita32' {
 					asm = folder + '\\tofita\(bit).asm.obj '
 				}
 
@@ -476,7 +475,6 @@ fun runTasks() {
 							' bit named ' + config.tempFolder + '/' + teaFolder + '/!named.bit.lib '
 						)
 					// TODO Hexa: }catch e: Any {} `:`
-					//try {fs.unlinkSync(config.tempFolder + '/' + teaFolder + '/!\(named).64.lib')}catch e: Any {}
 
 					phase2.push(libgen + (gen + items64).replaceAll('named', named).replaceAll('bit', '64'))
 					phase2.push(libgen + (gen + items32).replaceAll('named', named).replaceAll('bit', '32'))
@@ -496,17 +494,17 @@ fun runTasks() {
 				if error != null {
 			child_process.exec(cmd, fun (error Bool?, stdout String, stderr String) {
 						console.log('[Build error] ' + cmd)
+						if '' != '' + stderr {
+							console.log(stderr)
+						}
+						process.exitCode = 123
+						process.stdout.once('drain', fun () { process.exit(123) })
+						return
+					}
+
 					if '' != '' + stdout {
 						console.log(stdout)
 					}
-					if '' != '' + stderr {
-						console.log(stderr)
-					}
-					process.exitCode = 123
-					process.stdout.once('drain', fun () { process.exit(123) })
-					return
-				}
-
 				if '' != '' + stdout {
 					console.log(stdout)
 				}
