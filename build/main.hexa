@@ -330,10 +330,12 @@ fun runTasks() {
 				// TODO per-32/64-arch
 				// TODO libgen txt list here, to .lib in phase 2
 				// TODO --define bit32
+				let dllsFolder = dlls[i] == 'tofita32' ? 'dlls': '..\\Caramel\\dlls'
+
 				if bit == '32' {
-					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=false dlls\\\(dlls[i])\\hexa.json --target i386')
+					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=false \(dllsFolder)\\\(dlls[i])\\hexa.json --target i386')
 				} else {
-					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=true dlls\\\(dlls[i])\\hexa.json --target default')
+					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=true \(dllsFolder)\\\(dlls[i])\\hexa.json --target default')
 				}
 
 				// TODO refactor
