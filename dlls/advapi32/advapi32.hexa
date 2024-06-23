@@ -16,30 +16,35 @@
 @dllExport('RegCloseKey')
 fun regCloseKey(stub SizeOfPointer) SizeOfPointer {
 	// TODO
+	tofitaDebugLog("regCloseKey()\n".utf16())
 	return 0
 }
 
 @dllExport('RegCreateKeyExW')
 fun regCreateKeyExW(stub SizeOfPointer) SizeOfPointer {
 	// TODO
+	tofitaDebugLog("regCreateKeyExW()\n".utf16())
 	return 0
 }
 
 @dllExport('RegOpenKeyExW')
 fun regOpenKeyExW(stub SizeOfPointer) SizeOfPointer {
 	// TODO
+	tofitaDebugLog("regOpenKeyExW()\n".utf16())
 	return 0
 }
 
 @dllExport('RegQueryValueExW')
 fun regQueryValueExW(stub SizeOfPointer) SizeOfPointer {
 	// TODO
+	tofitaDebugLog("regQueryValueExW()\n".utf16())
 	return 0
 }
 
 @dllExport('RegSetValueExW')
 fun regSetValueExW(stub SizeOfPointer) SizeOfPointer {
 	// TODO
+	tofitaDebugLog("regSetValueExW()\n".utf16())
 	return 0
 }
 

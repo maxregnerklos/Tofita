@@ -57,17 +57,22 @@ uint64_t __aullrem() asm("__aullrem");
 uint64_t __aullrem() { return 0; } // TODO
 
 void _memset() asm("_memset");
-void _memset() { } // TODO TODO TODO
+void _memset() {
+	// TODO
+	tofitaDebugLog_(L"startup _memset", (uint64_t)((int32_t)0), (uint64_t)((int32_t)0));
+
+} // TODO TODO TODO
 #endif
 
-
+uint64_t bufferOffset_;
 void startup() {
 	// TODO hexa
+	bufferOffset_ = (int32_t)0;
 	HEXA_MAIN(0, nullptr);
 }
 
 #ifdef bit64
-__attribute__((fastcall)) void _DllMainCRTStartup() {
+__attribute__((fastcall)) void _DllMainCRTStartup(void *, uint32_t, void *) {
 	startup();
 }
 #else

@@ -1,5 +1,5 @@
 {
-	"name": "CommonControls",
+	"name": "Advapeh",
 	"version": "1.0.0",
 	"description": "Greentea OS",
 	"author": "PeyTy",
@@ -7,26 +7,24 @@
 	"global": [
 		"../types",
 		"../../engine/syscalls/syscalls",
-		"../tofita32.dll/tofita32.header",
-		"../kernel32.dll/kernel32.header",
-		"../ntdll.dll/ntdll.header",
-		"comctl32.header",
-		"comctlMain",
-		"comctl32Vars"
+		"../tofita32/tofita32.header",
+		"../kernel32/kernel32.header",
+		"../ntdll/ntdll.header",
+		"advapiMain"
 	],
 	"targets": [
 		{
 			"name": "default",
 			"generator": "c",
-			"output": "comctl32.64.c",
+			"output": "advapi32.64.c",
 			"options": []
 		},
 		{
 			"name": "i386",
 			"generator": "c",
-			"output": "comctl32.32.c",
+			"output": "advapi32.32.c",
 			"options": []
 		}
 	],
-	"entry": "comctl32"
+	"entry": "advapi32"
 }

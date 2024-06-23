@@ -475,10 +475,18 @@ fun closeClipboard(stub SizeOfPointer) SizeOfPointer {
     return 0
 }
 
+// TODO rename to `UIntOfPointer` or `UIntPointer`
 @dllExport('CreateDialogParamW')
-fun createDialogParamW(stub SizeOfPointer) SizeOfPointer {
+fun createDialogParamW(
+	hInstance HInstance,
+	lpTemplateName ConstArrayPointer<ClangWideChar>,
+	hWndParent HWnd,
+	lpDialogFunc WindowProcedure,
+	dwInitParam LParam
+) HWnd {
     // TODO
-    return 0
+    tofitaDebugLog("[user32] CreateDialogParamW called".utf16())
+    return 1 as! HWnd
 }
 
 @dllExport('CreatePopupMenu')

@@ -14,21 +14,22 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @dllExport('InitCommonControls')
-fun initCommonControls(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+fun initCommonControls() SizeOfPointer {
+	// TODO
+	tofitaDebugLog("InitCommonControls()\n".utf16())
+	return 0
 }
 
 @linkName('_DllMainCRTStartup_TODO')
 #if bit32
-    @stdcall
+	@stdcall
 #else
-    @fastcall
+	@fastcall
 #end
 fun _DllMainCRTStartup(
-    unusedX Any,
-    unusedY Any,
-    unusedZ Any
+	unusedX Any,
+	unusedY Any,
+	unusedZ Any
 ) Void {
-    // TODO
+	// TODO
 }

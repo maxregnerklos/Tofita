@@ -7,8 +7,8 @@
     "global": [
         "../types",
         "../../engine/syscalls/syscalls",
-        "../kernel32.dll/kernel32.header",
-        "../ntdll.dll/ntdll.header",
+        "../kernel32/kernel32.header",
+        "../ntdll/ntdll.header",
         "shell32.header",
         "shellMain",
         "shell32Vars"

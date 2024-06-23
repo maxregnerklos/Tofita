@@ -1,5 +1,5 @@
 {
-    "name": "NeaTo",
+    "name": "GeeDeeEye",
     "version": "1.0.0",
     "description": "Greentea OS",
     "author": "PeyTy",
@@ -7,23 +7,26 @@
     "global": [
         "../types",
         "../../engine/syscalls/syscalls",
-        "../tofita32.dll/tofita32",
-        "ntdllMain",
-        "ntdllVars"
+		"../tofita32/tofita32.header",
+        "../kernel32/kernel32.header",
+        "../ntdll/ntdll.header",
+        "gdi32.header",
+        "gdiMain",
+        "gdi32Vars"
     ],
     "targets": [
         {
             "name": "default",
             "generator": "c",
-            "output": "ntdll.64.c",
+            "output": "gdi32.64.c",
             "options": []
         },
         {
             "name": "i386",
             "generator": "c",
-            "output": "ntdll.32.c",
+            "output": "gdi32.32.c",
             "options": []
         }
     ],
-    "entry": "ntdll"
+    "entry": "gdi32"
 }

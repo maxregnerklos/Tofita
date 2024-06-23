@@ -268,12 +268,12 @@ fun runTasks() {
 		// DLL
 		phase1.push(
 			nasm + ' -f win64 -o ' +
-			folder + '\\tofita64.asm.obj dlls\\tofita32.dll\\tofita64.asm'
+			folder + '\\tofita64.asm.obj dlls\\tofita64.asm'
 		)
 
 		phase1.push(
 			nasm + ' -f win32 -o ' +
-			folder + '\\tofita32.asm.obj dlls\\tofita32.dll\\tofita32.asm'
+			folder + '\\tofita32.asm.obj dlls\\tofita32.asm'
 		)
 	}
 
@@ -331,9 +331,9 @@ fun runTasks() {
 				// TODO libgen txt list here, to .lib in phase 2
 				// TODO --define bit32
 				if bit == '32' {
-					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=false dlls\\\(dlls[i]).dll\\hexa.json --target i386')
+					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=false dlls\\\(dlls[i])\\hexa.json --target i386')
 				} else {
-					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=true dlls\\\(dlls[i]).dll\\hexa.json --target default')
+					phase1.push('cmd /c hexa --output-folder ' + folder + ' --define bit64=true dlls\\\(dlls[i])\\hexa.json --target default')
 				}
 
 				// TODO refactor

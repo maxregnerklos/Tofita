@@ -1,5 +1,5 @@
 {
-	"name": "Advapeh",
+	"name": "Core",
 	"version": "1.0.0",
 	"description": "Greentea OS",
 	"author": "PeyTy",
@@ -7,24 +7,25 @@
 	"global": [
 		"../types",
 		"../../engine/syscalls/syscalls",
-		"../tofita32.dll/tofita32.header",
-		"../kernel32.dll/kernel32.header",
-		"../ntdll.dll/ntdll.header",
-		"advapiMain"
+		"../tofita32/tofita32.header",
+		"../ntdll/ntdll.header",
+		"kernel32.header",
+		"kernelMain",
+		"kernel32Vars"
 	],
 	"targets": [
 		{
 			"name": "default",
 			"generator": "c",
-			"output": "advapi32.64.c",
+			"output": "kernel32.64.c",
 			"options": []
 		},
 		{
 			"name": "i386",
 			"generator": "c",
-			"output": "advapi32.32.c",
+			"output": "kernel32.32.c",
 			"options": []
 		}
 	],
-	"entry": "advapi32"
+	"entry": "kernel32"
 }

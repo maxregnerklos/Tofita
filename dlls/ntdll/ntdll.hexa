@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// TODO @linkName('KiFastSystemCall')
 fun kiFastSystemCall(rcx UInt64, rdx Payload) UInt64 {
 	return tofitaFastSystemCall(rcx as! TofitaSyscalls, rdx)
 }
@@ -23,6 +24,9 @@ declare Entry = (hInstance ConstArrayPointer<Void>, hPrev ConstArrayPointer<Void
 declare DllEntry = (hinstDLL ConstArrayPointer<Void>, fdwReason DllEntryReason, lpvReserved ConstArrayPointer<Void>) => Bool32
 // TODO must error `hinstDLL` twice `declare DllEntry = (hinstDLL ConstArrayPointer<Void>, fdwReason DllEntryReason, hinstDLL ConstArrayPointer<Void>) => Bool32`
 
+// @rename('hexa_entry') declare let hexa_entry Entry // TODO size_t
+// @rename('hexa_pid') declare let hexa_pid UInt64 // TODO size_t
+// @rename('hexa_dllEntries') declare let hexa_dllEntries UInt64 // TODO size_t
 @rename('hexa_startup') declare let hexa_startup UInt64 // TODO size_t aka PointerSizedUInt (size_t is guaranteed to be an unsigned type)
 
 @dllExport('memset')
@@ -44,6 +48,14 @@ fun greenteaosIsTheBest(startup ProcessStartupInformation) {
 	// TODO init DLLs
 	// TODO PEB/TEB
 	// TODO TLS callbacks [before EXE entry]
+
+	/* - look for IMAGE_TLS_DIRECTORY (IMAGE_DIRECTORY_ENTRY_TLS) and AddressOfCallBacks must be not 0. So this is real entry point(s) of this EXE - no other option, otherwise EXE will crashes.
+	So solution is to look for IMAGE_DIRECTORY_ENTRY_TLS.AddressOfCallBacks or set breakpoint to LdrpCallTlsInitializers*/
+
+	/*
+	really this was CLR (.NET) image - in this images type entry point is formal and not used after xp. system ignore it and call _CorExeMain in mscoree.dll as entry point.
+	https://msdn.microsoft.com/en-us/library/xh0859k0(v=vs.110).aspx
+	*/
 	// TODO delay-loaded DLLs
 	// TODO load DLLs in user mode
 	tofitaDebugLog("CRT ready for PID %u".utf16(), pid)

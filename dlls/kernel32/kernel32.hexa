@@ -37,6 +37,7 @@ fun localAlloc(flags UInt32, bytes SizeOfPointer) HLocal {
 		// TODO non-loop align
 	}
 
+	// TODO allocate buffer via VAlloc every time current one is exchausted
 	return result as! HLocal
 }
 
@@ -164,6 +165,7 @@ fun getTickCount(stub SizeOfPointer) SizeOfPointer {
 	tofitaDebugLog("getTickCount()\n".utf16())
 	return 0
 }
+
 @dllExport('GetVersionExW')
 fun getVersionExW(stub SizeOfPointer) SizeOfPointer {
 	// TODO
@@ -219,6 +221,7 @@ fun setUnhandledExceptionFilter(stub SizeOfPointer) SizeOfPointer {
 	tofitaDebugLog("setUnhandledExceptionFilter()\n".utf16())
 	return 0
 }
+
 @dllExport('Sleep')
 fun sleep(stub SizeOfPointer) SizeOfPointer {
 	// TODO

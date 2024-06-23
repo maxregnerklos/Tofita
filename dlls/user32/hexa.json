@@ -7,9 +7,9 @@
     "global": [
         "../types",
         "../../engine/syscalls/syscalls",
-        "../tofita32.dll/tofita32.header",
-        "../kernel32.dll/kernel32.header",
-        "../ntdll.dll/ntdll.header",
+        "../tofita32/tofita32.header",
+        "../kernel32/kernel32.header",
+        "../ntdll/ntdll.header",
         "user32.header",
         "userMain",
         "user32Vars"

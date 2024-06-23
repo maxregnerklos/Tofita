@@ -327,7 +327,7 @@
     STUB(fabs)
     STUB(fmod)
     STUB(log)
-    STUB(log10)
+    STUB(log10) ????????
     STUB(pow)
     STUB(sin)
     STUB(sinh)
