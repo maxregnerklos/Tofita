@@ -34,7 +34,7 @@ fun memset(dest ArrayPointer<UInt8>, e Int32, len UInt64) Void {
 @convention(fastcall) @fastcall // TODO
 declare fun
 trampolineCR3(@volatile engineParams UInt64, @volatile pml4 UInt64, @volatile stack UInt64,
-			  @volatile entry UInt64) Void
+	@volatile entry UInt64) Void
 
 // CPU manipulation
 @extern
@@ -181,15 +181,15 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 
 		{
 			serialPrintf("[[[uefi]]] EFI_TIME Year=%d Month=%d Day=%d Hour=%d Minute=%d Second=%d "
-						 +
-						 "Nanosecond=%d TimeZone=%d Daylight=%d\n",
-						 time.year, time.month, time.day, time.hour, time.minute, time.second,
-						 time.nanosecond, time.timeZone, time.daylight)
+				+
+				"Nanosecond=%d TimeZone=%d Daylight=%d\n",
+				time.year, time.month, time.day, time.hour, time.minute, time.second,
+				time.nanosecond, time.timeZone, time.daylight)
 
 			serialPrintf("[[[uefi]]] EFI_TIME_CAPABILITIES Resolution=%d Accuracy=%d SetsToZero=%d\n",
-						 capabilities.resolution,
-						 capabilities.accuracy,
-						 capabilities.setsToZero)
+				capabilities.resolution,
+				capabilities.accuracy,
+				capabilities.setsToZero)
 
 			// Set 2023 as least valid, so security/HTTPS certificates at least partially work
 			// and file system is not messed
@@ -262,7 +262,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 		serialPrintf("PE header signature 'PE' == '%s'\n", peHeader)
 		let peOptionalHeader = ((peHeader as! UInt64) + sizeOf<PeHeader>()) as! @readonly Pe32OptionalHeader
 		serialPrintf("PE32(+) optional header signature 0x020B == %d == %d\n", peOptionalHeader.mMagic,
-					 0x020B)
+			0x020B)
 		serialPrintf("PE32(+) size of image == %d\n", peOptionalHeader.mSizeOfImage)
 		let engineBase = conventionalAllocateNext(peOptionalHeader.mSizeOfImage)
 		memset(engineBase as! ArrayPointer<UInt8>, 0, peOptionalHeader.mSizeOfImage) // Zeroing
@@ -363,7 +363,7 @@ fun uefi(imageHandle ByValue<EFI_HANDLE>, systemTable EFI_SYSTEM_TABLE) EFI_STAT
 	let pageTableEntriesSize = sizeOf<PageEntry>() * pageTableEntriesCount
 	pml4entries =
 		conventionalAllocateNext(pageTableEntriesSize) as! ArrayPointer<ByValue<PageEntry>>
-		// TODO Hexa: `as! _`
+	// TODO Hexa: `as! _`
 
 	// Zero-fill PML4
 	{

@@ -42,7 +42,7 @@ class Window {
 	var proc WindowProcedure
 	var fb ByValue<WindowFramebuffer>
 	var instanceId UInt64 // Random unique ID
-	new () {}
+	new () { }
 }
 
 let windowIsRemoteWindow UInt16 = 0xA1CB

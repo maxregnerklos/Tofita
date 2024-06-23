@@ -15,44 +15,44 @@
 
 @dllExport('RegCloseKey')
 fun regCloseKey(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('RegCreateKeyExW')
 fun regCreateKeyExW(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('RegOpenKeyExW')
 fun regOpenKeyExW(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('RegQueryValueExW')
 fun regQueryValueExW(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('RegSetValueExW')
 fun regSetValueExW(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @linkName('_DllMainCRTStartup_TODO')
 #if bit32
-    @stdcall
+	@stdcall
 #else
-    @fastcall
+	@fastcall
 #end
 fun _DllMainCRTStartup(
-    unusedX Any,
-    unusedY Any,
-    unusedZ Any
+	unusedX Any,
+	unusedY Any,
+	unusedZ Any
 ) Void {
-    // TODO
+	// TODO
 }

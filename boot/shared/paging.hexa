@@ -98,7 +98,7 @@ fun conventionalAllocateLargest(memoryMap UefiMemoryMap) {
 
 	// Note: causes a crash if not %8 and `largestPages * pageSize`
 	serialPrintf("[paging] conventionalAllocateLargest is %8 bytes, %8 pages\n",
-				 pageSize * largestPages, largestPages)
+		pageSize * largestPages, largestPages)
 
 	return result
 }

@@ -15,38 +15,38 @@
 
 @dllExport('GetStockObject')
 fun getStockObject(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('GetTextExtentPoint32W')
 fun getTextExtentPoint32W(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('SetBkMode')
 fun setBkMode(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @dllExport('SetTextColor')
 fun setTextColor(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @linkName('_DllMainCRTStartup_TODO')
 #if bit32
-    @stdcall
+	@stdcall
 #else
-    @fastcall
+	@fastcall
 #end
 fun _DllMainCRTStartup(
-    unusedX Any,
-    unusedY Any,
-    unusedZ Any
+	unusedX Any,
+	unusedY Any,
+	unusedZ Any
 ) Void {
-    // TODO
+	// TODO
 }

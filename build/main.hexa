@@ -491,9 +491,12 @@ fun runTasks() {
 		let cmd = currentWave.shift()
 
 		if let cmd = cmd {
-				if error != null {
 			child_process.exec(cmd, fun (error Bool?, stdout String, stderr String) {
+					if error != null {
 						console.log('[Build error] ' + cmd)
+						if '' != '' + stdout {
+							console.log(stdout)
+						}
 						if '' != '' + stderr {
 							console.log(stderr)
 						}
@@ -505,9 +508,6 @@ fun runTasks() {
 					if '' != '' + stdout {
 						console.log(stdout)
 					}
-				if '' != '' + stdout {
-					console.log(stdout)
-				}
 
 					busy--
 					evaluate()

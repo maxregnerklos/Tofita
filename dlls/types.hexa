@@ -44,7 +44,7 @@ let error_invalid_handle = 6 as! LResult
 let invalid_handle_value = (-1) as! Handle
 // TODO `let invalid_handle_value = -1 as! Handle` not `(-1)`
 
-enum Bool32 : Int32 {
+enum Bool32: Int32 {
 	False = 0
 	// TODO ^ types check infer 0i32 etc same as int
 	True = 1
@@ -67,8 +67,8 @@ class Rect {
 
 @struct
 class PaintStruct {
-	//var xdc Handle // TODO Unused?
-	//var udc Handle
+	// var xdc Handle // TODO Unused?
+	// var udc Handle
 	var hdc HDc
 	var fErase Bool32
 	// TODO this and other ByValue fields must be `let` to avoid unnecessary copy
@@ -79,7 +79,7 @@ class PaintStruct {
 	var rgbReserved ArrayByValue<UInt8, 32>
 }
 
-enum Message : UInt32 {
+enum Message: UInt32 {
 	WM_NULL = 0x0000
 	WM_CREATE = 0x0001
 	WM_DESTROY = 0x0002
@@ -180,7 +180,7 @@ class Msg {
 	var pt ByValue<Point>
 	var lPrivate UInt32
 
-	new () {}
+	new () { }
 }
 
 // TODO convention (actually may be any so must build universal call frame)
@@ -198,10 +198,10 @@ class WindowClass {
 	var hbrBackground HBrush
 	var lpszMenuName ConstArrayPointer<ClangWideChar>
 	var utf16zClassName ConstArrayPointer<ClangWideChar>
-	new () {}
+	new () { }
 }
 
-enum CmdShow : Int32 {
+enum CmdShow: Int32 {
 	SW_HIDE = 0
 	SW_SHOWNORMAL = 1
 	SW_NORMAL = SW_SHOWNORMAL
@@ -226,7 +226,7 @@ class PixelRGBAData {
 	var g UInt8
 	var b UInt8
 	var a UInt8
-	new () {}
+	new () { }
 }
 
 // Union is pointer by default
@@ -236,7 +236,7 @@ class PixelRGBAData {
 class Pixel32 {
 	var rgba ByValue<PixelRGBAData>
 	var color UInt32
-	new () {}
+	new () { }
 }
 
 @struct

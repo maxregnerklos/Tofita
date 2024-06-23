@@ -21,7 +21,7 @@ fun memzero(dest ArrayPointer<UInt8>, len UInt64) {
 // Clang workaround
 @keep
 @rename('___chkstk_ms')
-fun chkstkStub() Void {}
+fun chkstkStub() Void { }
 
 // Hexa definitions
 @extern @rename('versionMajor') declare let versionMajor Int
@@ -41,7 +41,7 @@ fun engineInit(params UefiPayload) {
 	// uint32_t megs = Math::round((double)params->ramBytes / (1024.0 * 1024.0));
 	// uint32_t availableMegs = Math::round((double)available / (1024.0 * 1024.0));
 	// quakePrintf(L"[CPU] %s %s %d MB RAM (%d MB usable)\n", cpuid.vendorID, cpuid.brandName, megs,
-	//			availableMegs);
+	// availableMegs);
 
 	// Ensure to allocate within 1 MB
 	PhysicalAllocator.resetCounter()
@@ -146,7 +146,7 @@ fun engineInit(params UefiPayload) {
 		// TODO exact address should be 0x8000u64?
 		serialPrintln("<Tofita> cannot allocate trapeze under 1 MB")
 		qsod("Cannot allocate trapeze under 1 MB, got at %8\n".utf16(), trapezePhysical, 0)
-		while true {}
+		while true { }
 		// TODO test by >1 if it even renders this message
 	}
 
@@ -283,7 +283,7 @@ fun engineInit(params UefiPayload) {
 
 			if i == 4 {
 				loadExeIntoProcess("desktop/calc64.exe", guiProcess)
-				//loadExeIntoProcess("desktop/calc32.exe", guiProcess)
+				// loadExeIntoProcess("desktop/calc32.exe", guiProcess)
 				guiProcess.name = "calc32.exe"
 				guiProcess.name = "calc64.exe"
 			}

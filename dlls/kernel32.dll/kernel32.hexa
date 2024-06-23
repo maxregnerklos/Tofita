@@ -18,7 +18,7 @@
 fun exitProcess(@hide exitCode UInt32) {
 	tofitaExitProcess(exitCode)
 	// TODO jump to NtDLL or something
-	while true {}
+	while true { }
 }
 
 @dllExport('LocalAlloc')
@@ -269,4 +269,4 @@ fun writeProfileStringW(stub SizeOfPointer) SizeOfPointer {
 }
 
 // TODO @linkName('_DllMainCRTStartup')
-@fastcall fun _DllMainCRTStartup() Void {}
+@fastcall fun _DllMainCRTStartup() Void { }

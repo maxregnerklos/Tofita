@@ -36,14 +36,14 @@ class PeInterim {
 	var imageDataDirectory ArrayPointer<ByValue<ImageDataDirectory>>
 	var sizeOfStackReserve UInt64
 	var is64bit Bool
-	new () {}
+	new () { }
 }
 
 @struct
 class ExeInterim {
 	var pei PeInterim
 	var stackVirtual UInt64
-	new () {}
+	new () { }
 }
 
 @struct
@@ -58,7 +58,7 @@ class PeExportLinkedList {
 class Executable {
 	var nextBase UInt64
 	var pml4 ArrayPointer<ByValue<PageEntry>>
-	new () {}
+	new () { }
 }
 
 fun is64Exe(asset RamDiskAsset) {
@@ -81,7 +81,7 @@ fun is64Exe(asset RamDiskAsset) {
 // @require(SIZE is UInt64 or UInt32) <- same for optional fields
 // @optionalValidate(SIZE is UInt64, flag: 'is64'); @enableIf('is64') fun
 class ExeLoader<SIZE, HEADER> {
-	new() {}
+	new () { }
 
 	// TODO probe for read/write
 	// TODO error if not found
@@ -120,7 +120,7 @@ class ExeLoader<SIZE, HEADER> {
 		serialPrintf("[loadDLL] PE header signature 'PE' == '%s'\n", peHeader)
 		var peOptionalHeader = ((peHeader as! UInt64) + sizeOf<PeHeader>()) as! HEADER
 		serialPrintf("[loadDLL] PE32(+) optional header signature 0x020B == %d == %d\n", peOptionalHeader.magic,
-					0x020B)
+			0x020B)
 		// TODO require all .dlls ARCH be the same or show loader error
 		serialPrintf("[loadDLL] PE32(+) size of image == %d\n", peOptionalHeader.sizeOfImage)
 
@@ -349,9 +349,9 @@ class ExeLoader<SIZE, HEADER> {
 					if (pThunkOrg.ordinal & 0x80000000u32) != 0 {
 						ord = pThunkOrg.ordinal & 0xffff
 						serialPrintf("[resolveDllImports] import {%s}.@%d - at address: {%d} <------------ NOT "
-									+
-									"IMPLEMENTED YET!\n",
-									szName, ord, pThunkOrg.func
+							+
+							"IMPLEMENTED YET!\n",
+							szName, ord, pThunkOrg.func
 						)
 					} else {
 						let pIBN = (
@@ -365,8 +365,8 @@ class ExeLoader<SIZE, HEADER> {
 						ord = pIBN.hint
 						var szImportName ConstArrayPointer<UInt8> = pIBN.name as! ConstArrayPointer<UInt8>
 						serialPrintf("[resolveDllImports] import {%s}.{%s}@%d - at address: {%d}\n",
-									szName,
-									szImportName, ord, pThunkOrg.func)
+							szName,
+							szImportName, ord, pThunkOrg.func)
 
 						// Resolve import
 						// func = null // TODO This should error
@@ -606,7 +606,9 @@ class ExeLoader<SIZE, HEADER> {
 			(startup as! UInt64) - wholePhysicalStart,
 			1,
 			accessibleByUser: true
-		) /* TODO ?? {
+		)
+
+		/* TODO ?? {
 			unMap()
 			return // <- here guard returns from a block, not immediately `?? return`
 		} Hexa */

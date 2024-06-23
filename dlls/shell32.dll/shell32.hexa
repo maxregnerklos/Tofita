@@ -15,20 +15,20 @@
 
 @dllExport('ShellAboutW')
 fun shellAboutW(stub SizeOfPointer) SizeOfPointer {
-    // TODO
-    return 0
+	// TODO
+	return 0
 }
 
 @linkName('_DllMainCRTStartup_TODO')
 #if bit32
-    @stdcall
+	@stdcall
 #else
-    @fastcall
+	@fastcall
 #end
 fun _DllMainCRTStartup(
-    unusedX Any,
-    unusedY Any,
-    unusedZ Any
+	unusedX Any,
+	unusedY Any,
+	unusedZ Any
 ) Void {
-    // TODO
+	// TODO
 }

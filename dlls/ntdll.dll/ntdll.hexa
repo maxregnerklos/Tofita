@@ -30,11 +30,11 @@ fun memset(value UInt32) {
 	// TODO !!
 }
 
-enum DllEntryReason : UInt32 {
+enum DllEntryReason: UInt32 {
 	DLL_PROCESS_ATTACH = 1
 }
 
-//TODO set as entry @linkName('greenteaosIsTheBest')
+// TODO set as entry @linkName('greenteaosIsTheBest')
 fun greenteaosIsTheBest(startup ProcessStartupInformation) {
 	let entry Entry = startup.entry
 	let pid UInt64 = startup.pid
@@ -43,7 +43,7 @@ fun greenteaosIsTheBest(startup ProcessStartupInformation) {
 	// TODO probably should call own DLL startup code (hexa main)
 	// TODO init DLLs
 	// TODO PEB/TEB
-	// TODO TLS callbacks
+	// TODO TLS callbacks [before EXE entry]
 	// TODO load DLLs in user mode
 	tofitaDebugLog("CRT ready for PID %u".utf16(), pid)
 	// TODO as stricture `{ count UInt32, dllEntries ArrayByValue<...> }`
@@ -71,7 +71,7 @@ fun greenteaosIsTheBest(startup ProcessStartupInformation) {
 
 	// TODO non-null stubs here, like HInstance etc
 	tofitaExitProcess(entry(null, null, null, 0))
-	while true {}
+	while true { }
 }
 
 // TODO get this structure from FS/GS

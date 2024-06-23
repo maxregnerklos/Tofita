@@ -17,7 +17,7 @@
 // TODO `@link('asIs')` `@link('TitleCase')`
 /*private*/ let convention = 'stdcall'
 
-//@convention(convention) // TODO
+// @convention(convention) // TODO
 @dllExport('__dllonexit')
 fun __dllonexit(stub SizeOfPointer) SizeOfPointer {
 	// TODO
@@ -168,10 +168,10 @@ var _wcmdln ArrayByValue<UInt16, 4> = [
 	101u16,
 	0u16
 ]
-//fun _wcmdln(stub SizeOfPointer) SizeOfPointer {
-//    // TODO
-//    return 0
-//}
+// fun _wcmdln(stub SizeOfPointer) SizeOfPointer {
+// // TODO
+// return 0
+// }
 
 @dllExport('_wcsicmp')
 fun _wcsicmp(stub SizeOfPointer) SizeOfPointer {
@@ -281,7 +281,7 @@ fun log10(stub SizeOfPointer) SizeOfPointer {
 @struct @packed
 class Malloc {
 	var payload ArrayByValue<UInt8, 2048> = [0]
-	new () {}
+	new () { }
 }
 
 @dllExport('malloc')

@@ -20,11 +20,11 @@ let _fltused Int64 = 0
 @convention('fastcall')
 // TODO ^ template substitution for var names in decorators by default
 declare fun tofitaFastSystemCall(rcx TofitaSyscalls,
-#if bit64
-	rdx UInt64 = 0
-#else
-	rdx UInt32 = 0
-#end
+	#if bit64
+		rdx UInt64 = 0
+	#else
+		rdx UInt32 = 0
+	#end
 ) #if bit64 UInt64 #else UInt32 #end
 // TODO link name + dll import
 @fastcall declare fun tofitaFastStub(rcx UInt64, rdx UInt64) UInt32
