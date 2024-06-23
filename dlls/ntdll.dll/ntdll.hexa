@@ -44,25 +44,30 @@ fun greenteaosIsTheBest(startup ProcessStartupInformation) {
 	// TODO init DLLs
 	// TODO PEB/TEB
 	// TODO TLS callbacks [before EXE entry]
+	// TODO delay-loaded DLLs
 	// TODO load DLLs in user mode
 	tofitaDebugLog("CRT ready for PID %u".utf16(), pid)
 	// TODO as stricture `{ count UInt32, dllEntries ArrayByValue<...> }`
 	let count = startup.dllCount
-	let dllMains = dllEntries as! ConstArrayPointer<DllEntry>
+	let dllMains = dllEntries as! ConstArrayPointer<DllEntry?>
 
 	if dllEntries == 0 {
 		tofitaDebugLog("dllEntries == 0 for PID %u".utf16(), pid)
 	}
 
 	for i in count {
-		dllMains[i](null, DllEntryReason.DLL_PROCESS_ATTACH, null)
+		// DLL may have no entry
+		if let entryPoint = dllMains[i] {
+			entryPoint(null, DllEntryReason.DLL_PROCESS_ATTACH, null)
+		}
 	}
 
 	// TODO unmap entries/ProcessStartupInformation if required
 	tofitaDebugLog("Done %u DLLs".utf16(), count)
 
 	if entry != null {
-		tofitaDebugLog("entry != null OK for PID %u".utf16(), pid)
+		// Note: some apps requre entry to be called even if its zero to invoke TLS callbacks
+		tofitaDebugLog("entry != null OK for PID %u at %8".utf16(), pid, entry)
 	}
 
 	if entry == null {
