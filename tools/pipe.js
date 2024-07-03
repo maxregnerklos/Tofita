@@ -43,18 +43,18 @@ const PIPE_PATH = "\\\\.\\pipe\\" + PIPE_NAME
 // Disallow breaking terminal with special chars
 const allowed = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890`~!@#$%^&*()_+-=[]{}\\|;\'",./<>?:\t\r\n '
 
-var client = require('net').connect(PIPE_PATH, function() {})
+var client = require('net').connect(PIPE_PATH, function () { })
 
 // Avoid nodejs crashes:
 const domain = require('domain').create()
-domain.on('error', function(err) {
+domain.on('error', function (err) {
 	console.error(err)
 })
 
 function reconnect() {
 	client.removeAllListeners()
 
-	client.on('data', function(data) {
+	client.on('data', function (data) {
 		let s = []
 		for (let i = 0; i < data.length; i++) {
 			if (data[i] == 0) continue
@@ -65,12 +65,12 @@ function reconnect() {
 		process.stdout.write(s.join(''), 'ascii')
 	})
 
-	client.on('end', function() {})
-	client.on('close', function() {
+	client.on('end', function () { })
+	client.on('close', function () {
 		reconnect()
 	})
 
-	client.on('error', function() {
+	client.on('error', function () {
 		reconnect()
 	})
 
