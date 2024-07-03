@@ -1,5 +1,5 @@
 ; The Tofita Engine
-; Copyright (C) 2020 Oleh Petrenko
+; Copyright (C) 2020-2024 Oleh Petrenko
 ;
 ; This program is free software: you can redistribute it and/or modify
 ; it under the terms of the GNU Lesser General Public License as published by
@@ -7,11 +7,11 @@
 ;
 ; This program is distributed in the hope that it will be useful,
 ; but WITHOUT ANY WARRANTY; without even the implied warranty of
-; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ; GNU Lesser General Public License for more details.
 ;
 ; You should have received a copy of the GNU Lesser General Public License
-; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 %define SYS_CODE64_SEL 0x10
 %define SYS_DATA32_SEL 0x18
