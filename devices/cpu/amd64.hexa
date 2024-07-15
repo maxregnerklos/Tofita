@@ -89,7 +89,7 @@ declare fun yield() Void
 @rename('rdmsr')
 declare fun rdmsr(
 	msr UInt64
-) Void
+) UInt64
 
 @customHeader('
 	void wrmsr(uint64_t addr, uint64_t value) {

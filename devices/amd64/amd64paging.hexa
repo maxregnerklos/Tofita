@@ -29,6 +29,7 @@ fun mapPage(entry PageEntry, address UInt64, writeAllowed Bool, accessibleByUser
 	entry.writeAllowed = writeAllowed ? 1u8 : 0u8
 	// TODO `accessibleByUser and (v is lower half)` as a last-resort measure
 	entry.accessibleByUser = accessibleByUser ? 1u8 : 0u8
+	// TODO entry.disableExecution = accessibleByUser ? 1u8: 0u8
 }
 
 fun referOrCreatePage(table ArrayPointer<ByValue<PageEntry>>, entryId UInt64, writeAllowed Bool, accessibleByUser Bool) ArrayPointer<ByValue<PageEntry>> {

@@ -130,6 +130,7 @@ fun mapFrameBuffer(@readonly fb FrameBuffer) {
 		frameBufferVirtualBase,
 		fb.base as! UInt64,
 		fb.size / pageSize + 1u32,
+		// TODO engine-only Ring0
 		global: true
 	)
 }

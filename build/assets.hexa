@@ -52,7 +52,7 @@ let deps [[String]] = [
 fun packFonts(config Config) {
 	let fs = require('fs')
 	let chars [{ code: Int, x: Int, y: Int, width: Float }] =
-		JSON.parse(fs.readFileSync('..\\Tongue\\fonts\\bitmap\\ascii.json').toString().trim())
+		JSON.parse(fs.readFileSync('..\\Tongue\\fonts\\bitmap\\ASCII.json').toString().trim())
 
 	let charSize = 2 + 2 + 8
 	let size = 256 * charSize // Just ASCII for now
