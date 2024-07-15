@@ -91,6 +91,17 @@ class Viewer {
 		Screen.height = window.height
 		Screen.pixels = window.fbZeta.pixels
 
+		drawPicture()
+
+		Screen.width = screenWidth
+		Screen.height = screenHeight
+		Screen.pixels = screenPixels
+
+		// Go
+		overlappedWindow_attach(window.windowId)
+	}
+
+	fun drawPicture() {
 		if picture == null {
 			var color = new ByValue<Pixel32>()
 			// TODO light theme
@@ -103,19 +114,16 @@ class Viewer {
 				color.ref
 			)
 		} else {
+			let x = window.width / 2 - picture.width / 2i16
+			let y = window.height / 2 - picture.height / 2i16
+			// TODO do NOT draw shadow for transparent pictures
+			drawShadowBox(x, y, picture.width + 0u16, picture.height + 0u16)
 			drawBitmap32WithAlpha(
-				picture,
-				window.width / 2 - picture.width / 2i16,
-				window.height / 2 - picture.height / 2i16
+				picture, // TODO `??`
+				x,
+				y
 			)
 		}
-
-		Screen.width = screenWidth
-		Screen.height = screenHeight
-		Screen.pixels = screenPixels
-
-		// Go
-		overlappedWindow_attach(window.windowId)
 	}
 
 	var down Bool = false
@@ -140,13 +148,8 @@ class Viewer {
 			// Clear
 			let color = new ByValue<Pixel32>()
 			color.ref.color = 0x33333333u32
-			drawRectangle(color, 0, 0,window.width, window.height)
-			drawBitmap32WithAlpha(
-				picture, // TODO `??`
-				window.width / 2 - picture.width / 2i16,
-				window.height / 2 - picture.height / 2i16
-			)
-
+			drawRectangle(color, 0, 0, window.width, window.height)
+			drawPicture()
 			down = true
 			requestAnimationFrame()
 		}
