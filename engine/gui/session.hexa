@@ -104,8 +104,16 @@ class GraphicalSession {
 			processInit(newProcess)
 			loadExeIntoProcess(file, newProcess)
 			newProcess.name = displayName
-			newProcess.schedulable = true
-		// TODO Hexa: damn written like `} if file == "*:quake" {` instead of `} else if`
+
+			if not file.endsWith('demo32.exe') and not file.endsWith('demo64.exe') {
+				newProcess.schedulable = false
+				alert(
+					"App requires features that are not yet fully supported. Try another."
+				)
+			} else {
+				newProcess.schedulable = true
+			}
+			// TODO Hexa: damn written like `} if file == "*:quake" {` instead of `} else if`
 		} else if file == "*:quake" {
 			haveToQuake = true
 		} else if file == "*:files" {
