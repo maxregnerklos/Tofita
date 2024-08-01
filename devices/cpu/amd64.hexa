@@ -71,6 +71,10 @@ declare fun disableAllInterrupts() Void
 @emitHeader @linkAsIs
 declare fun enableAllInterruptsAndHalt() Void
 
+@extern
+@rename("__sync_synchronize")
+declare fun __sync_synchronize() Void
+
 @rename('pause')
 @emitHeader @linkAsIs
 declare fun pause() Void

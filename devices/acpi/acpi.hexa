@@ -64,6 +64,7 @@ class AcpiMcfg {
 	var entries ArrayByValue<ByValue<AcpiMcfgEntry>, 0>
 }
 
+// TODO move to apic.hexa
 @struct @packed
 class AcpiApic {
 	// TODO static let sign = @acpiHeaderSignature 'APIC'
@@ -157,6 +158,7 @@ class PciGroup {
 	}
 }
 
+// TODO move acpiParser.hexa
 class ACPIParser {
 	static fun parse(acpiVendorTable UInt64) Bool {
 		serialPrint("[ACPI] parsing started at physical ")
@@ -289,9 +291,300 @@ class ACPIParser {
 		quakePrintf("done.\n".utf16())
 	}
 
+	// TODO test volatile
+	@volatile static var coresAp UInt64 = 1
+
+	static fun apStart() {
+		// TODO seems useless, cause main CPU waits for SIPIs anyway
+		// apLock.lock()
+
+		// TODO IDT
+		// TODO GDT
+		// TODO NX
+		let core = coresAp + 1
+		quakePrintf("CPU #%u initialized, ".utf16(), core)
+		disableAllInterrupts()
+		coresAp++
+		// apLock.unlock()
+
+		while true {
+			halt()
+			pause()
+		}
+	}
+
+	static let smpEnabled Bool = false
+
+	// TODO Hexa: `<T>` note: not @volatile by default
+	static fun writeToUInt64(address UInt64, value UInt64) Void {
+		let at = address as! ArrayPointer<@volatile UInt64>
+		at[0] = value
+	}
+
+	static fun writeToUInt32(address UInt64, value UInt32) Void {
+		let at = address as! ArrayPointer<@volatile UInt32>
+		at[0] = value
+	}
+
+	static fun readFromUInt32(address UInt64) UInt32 {
+		let at = address as! ArrayPointer<@volatile UInt32>
+		return at[0] // TODO as! UInt32
+	}
+
+	// Note: non volatile
+	static fun readFromUInt8(address UInt64) UInt8 {
+		let at = address as! ArrayPointer<UInt8>
+		return at[0] // TODO as! UInt32
+	}
+
 	static fun loadApic(apic AcpiApic) {
-		var local ArrayPointer<UInt32> = (apic.localAddress) as! ArrayPointer<UInt32>
-		serialPrintf("loadApic\n")
+		serialPrintf("loadApic begin\n")
+		// TODO Delay between IPI-SIPI + disable PIC
+		if not smpEnabled { return }
+		disableAllInterrupts()
+
+		let apic_base_flag = 0xFFFFF000u32
+		let apic_enable_flag = 0x800u32
+
+		let ia32_apic_base = 27u64
+		wrmsr(ia32_apic_base, (apic.localAddress & apic_base_flag) | apic_enable_flag)
+
+		// TODO define this in globals
+		let virtualLocalApic = wholePhysicalStart + (32u64 * 1024u64 * 1024u64 * 1024u64)
+		let physicalLocalApic = apic.localAddress
+
+		fun localApicOut(reg UInt64, data UInt32) Void {
+			// TODO Hexa: volatile types cannot be assigned
+			// TODO Hexa: code gen
+			// let at = (virtualLocalApic + reg) as! ArrayPointer<@volatile UInt32>
+			// at[0] = data
+			writeToUInt32(virtualLocalApic + reg, data)
+		}
+
+		// TODO Hexa: optimize to `fun`: `let localApicIn = (reg UInt64) => {`
+		// TODO Hexa: disable (arg TYPE_THIS_THING) for arrow fun-s, let use `fun` when non-inferrable
+		fun localApicIn(reg UInt64) UInt32 {
+			// TODO return readFrom<ArrayPointer<@volatile UInt32>>(virtualLocalApic + reg)
+			// let at = (virtualLocalApic + reg) as! ArrayPointer<@volatile UInt32>
+			// return at[0]
+			return readFromUInt32(virtualLocalApic + reg)
+		}
+
+		let lapic_tpr = 0x0080u64 // Task Priority
+		let lapic_dfr = 0x00e0u64 // Destination Format
+		let lapic_ldr = 0x00d0u64 // Logical Destination
+		let lapic_svr = 0x00f0u64 // Spurious Interrupt Vector
+
+		mapMemory(pml4entries, virtualLocalApic, physicalLocalApic, 1)
+
+		localApicOut(lapic_tpr, 0) // Clear task priority to enable all interrupts
+		localApicOut(lapic_dfr, 0xffffffffu32) // Flat mode
+		localApicOut(lapic_ldr, 0x01000000) // All CPUs use logical id 1
+		localApicOut(lapic_svr, 0x100u32 | 0xff) // Configure Spurious Interrupt Vector Register
+
+		let virtualIoApic = wholePhysicalStart + (33u64 * 1024u64 * 1024u64 * 1024u64)
+		var physicalIoApic = 0u64
+
+		let count = acpiTableEntries(apic, 1)
+		var data ArrayPointer<UInt8> = apic.controllerData.ref
+		let end = data.offsetItems(count)
+
+		while data.address < end.address {
+			let type = data[0] as! ApicType
+			let length = data[1]
+			switch type {
+				case APIC_TYPE_IO_APIC:
+					let s = data as! ApicIoApic
+					physicalIoApic = s.ioApicAddress
+			}
+
+			data = data.offsetItems(length)
+		}
+
+		mapMemory(pml4entries, virtualIoApic, physicalIoApic, 1) // Map memory, 1 page
+
+		let ioregsel = 0x00
+		let iowin = 0x10
+
+		let ioapicid = 0x00
+		let ioapicver = 0x01u8
+		let ioapicarb = 0x02
+		let ioredtbl = 0x10u8
+
+		fun ioApicOut(base UInt64, reg UInt8, val UInt32) Void {
+			writeToUInt32(base + ioregsel, reg)
+			writeToUInt32(base + iowin, val)
+		}
+
+		fun ioApicIn(base UInt64, reg UInt8) UInt32 {
+			writeToUInt32(base + ioregsel, reg)
+			return readFromUInt32(base + iowin)
+		}
+
+		fun ioApicSetEntry(base UInt64, index UInt8, data UInt64) Void {
+			ioApicOut(base, ioredtbl + index * 2u8, data as! UInt32)
+			ioApicOut(base, ioredtbl + index * 2 + 1u8, (data >> 32) as! UInt32)
+		}
+
+		fun ioApicInit() Void {
+			let x = ioApicIn(virtualIoApic, ioapicver)
+			let count = ((x >> 16) & 0xff) + 1u8 // Maximum redirection entry
+
+			for i in count { // Disable all entries
+				ioApicSetEntry(virtualIoApic, i, 1u64 << 16)
+			}
+		}
+
+		ioApicInit()
+
+		fun acpiRemapIrq(irq UInt32) UInt32 {
+			let count = acpiTableEntries(apic, 1)
+			var data ArrayPointer<UInt8> = apic.controllerData.ref
+			// TODO Hexa: produces UInt64 `let end = data + count`
+			let end = data.offsetItems(count)
+
+			while data.address < end.address {
+				let type = data[0] as! ApicType
+				let length = data[1]
+
+				switch type {
+					case APIC_TYPE_INTERRUPT_OVERRIDE:
+						let s = data as! ApicInterruptOverride
+						if s.source == irq {
+							return s.interrupt
+						}
+				}
+
+				data = data.offsetItems(length)
+			}
+
+			return irq
+		}
+
+		let int_timer = 0x20u64
+		let irq_timer = 0x00u32
+		ioApicSetEntry(virtualIoApic, acpiRemapIrq(irq_timer) as! UInt8, int_timer)
+
+		let lapic_eoi = 0x00b0u64 // End of Interrupt
+		localApicOut(lapic_eoi, 0)
+
+		let trapeze = 0x8000 + wholePhysicalStart
+		let trapezePhysical = trapeze - wholePhysicalStart
+		mapMemory(pml4entries, trapeze, trapezePhysical, 1)
+		mapMemory(pml4entries, 0x8000u64 - 4096, 0x8000u64 - 4096, 16)
+
+		let ready = trapeze + 8
+		let cpu_id = ready + 8
+		let page_table = cpu_id + 8
+
+		let stack_start = page_table + 8
+		let stack_end = stack_start + 8
+		let code = stack_end + 8
+
+		let pml4 = code + 8
+
+		var data = apic.controllerData.ref
+		let count = acpiTableEntries(apic, 1)
+		let end = data.offsetItems(count)
+		let bsp = 0 // TODO Get from LAPIC MSR?
+		let x2 = false // TODO
+
+		while data.address < end.address {
+			let type = data[0]
+			let length = data[1]
+
+			switch type {
+				case 0:
+					let position = data as! UInt64
+					let cpuid = readFromUInt8(position + 2)
+					let lapicid = readFromUInt8(position + 3)
+					let flags = readFromUInt8(position + 4)
+
+					if bsp == cpuid {
+						// TODO break // TODO Hexa
+					}
+
+					if (flags & 0x1) == 0 {
+						// TODO break // TODO Hexa
+					}
+
+					let _stack_start = PhysicalAllocator.allocatePages(64)
+					let _stack_end = stack_start + 64 * 4096
+
+					let pml4 = (pml4entries as! UInt64) - wholePhysicalStart
+					writeToUInt64(ready, pml4)
+					writeToUInt64(cpu_id, cpuid)
+					writeToUInt32(page_table, ((pml4entries as! UInt64) - wholePhysicalStart) as! UInt32)
+					// TODO &globalGdtr
+					let gtdAt = ((globalGdtr as! UInt64) - wholePhysicalStart) as! UInt32
+					// TODO is UInt32 is really enough here?
+					writeToUInt32(page_table + 4, gtdAt)
+					writeToUInt64(stack_start, _stack_start)
+					writeToUInt64(stack_end, _stack_end)
+					// TODO `.meta.address`
+					writeToUInt64(code, apStart as! UInt64)
+
+					__sync_synchronize()
+
+					let icr = 0x4500
+					if x2 {
+						// TODO
+					} else {
+						let lapic_icrhi = 0x0310u64 // Interrupt Command [63:32]
+						let icr_destination_shift = 24u32
+						let lapic_icrlo = 0x0300u64 // Interrupt Command
+						let icr_init = 0x00000500u32
+						let icr_physical = 0x00000000u32
+						let icr_assert = 0x00004000u32
+						let icr_edge = 0x00000000u32
+						let icr_no_shorthand = 0x00000000u32
+						let icr_send_pending = 0x00001000u32
+
+						let apic_id = lapicid
+						localApicOut(lapic_icrhi, apic_id << icr_destination_shift)
+						localApicOut(lapic_icrlo, icr_init | icr_physical | icr_assert | icr_edge | icr_no_shorthand)
+
+						while (localApicIn(lapic_icrlo) & icr_send_pending) != 0 {
+							pause()
+						}
+					}
+
+					let currentCoresAp = coresAp
+
+					let trampoline = 0x8000u64
+					let ap_segment = (trampoline >> 12u64) & 0xFFu64
+					var icr = 0x4600u64 | ap_segment
+
+					if x2 {
+						// TODO
+					} else {
+						icr |= (cpuid << 56u64)
+
+						while localApicIn(0x300u64) & 1u32 << 12u32 == 1u32 << 12u32 {
+							pause()
+						}
+
+						localApicOut(0x310, (icr >> 32u64) as! UInt32)
+						localApicOut(0x300, icr as! UInt32)
+
+						while localApicIn(0x300u64) & 1u32 << 12u32 == 1u32 << 12u32 {
+							pause()
+						}
+
+						let apic_id = lapicid
+						let vector = icr
+						let icr_startup = 0x00000600 // TODO
+					}
+
+					while currentCoresAp == coresAp {
+						pause()
+					}
+			}
+
+			data = data.offsetItems(length)
+		}
+
+		serialPrintf("loadApic done\n")
 	}
 
 	static fun loadMcfg(mcfg AcpiMcfg) {
