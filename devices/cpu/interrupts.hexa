@@ -335,10 +335,10 @@ fun tssSetEntry(i UInt8, base UInt64, limit UInt64) {
 	tssd.reserved = 0
 
 	tssd.type = (
-		GdtType.Accessed |
-		GdtType.Execute |
-		GdtType.Ring3 | // TODO
-		GdtType.Present
+		GdtType.Accessed as! UInt8 |
+		GdtType.Execute as! UInt8 |
+		GdtType.Ring3 as! UInt8 | // TODO needed?
+		GdtType.Present as! UInt8
 	) as! GdtType
 }
 
