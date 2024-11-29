@@ -31,6 +31,10 @@ declare HGlobal = Handle
 declare HWnd = Handle
 declare HMenu = Handle
 declare HDc = Handle
+declare HFont = Handle
+declare HRsrc = Handle
+declare HMonitor = Handle
+declare HModule = Handle
 
 // TODO @byValue + @sizeOf(8/4)/@sizeOfPointer + value: size_t = safe converters
 @struct
@@ -170,6 +174,12 @@ class Point {
 	var y Int32
 }
 
+@struct
+class Size {
+	var cx Int32
+	var cy Int32
+}
+
 @struct @sizeOf(48)
 class Msg {
 	var hwnd HWnd
@@ -245,4 +255,15 @@ class WindowFramebuffer {
 	var pixels UInt64 // ArrayPointer<ByValue<Pixel32>>
 	var width UInt32
 	var height UInt32
+}
+
+@struct
+class DIALOGINFO {
+	var hwndFocus HWnd
+	var hUserFont HFont
+	var hMenu HMenu
+	var xBaseUnit UInt32
+	var yBaseUnit UInt32
+	var idResult Int32
+	var flags UInt32
 }
