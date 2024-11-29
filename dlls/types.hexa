@@ -53,6 +53,13 @@ enum Bool32: Int32 {
 	// TODO ^ types check infer 0i32 etc same as int
 	True = 1
 	// TODO ^ `true` is any non-0 value `True = 1 or _` or just `v != Bool32.False`
+	static fun fromBool(value Bool) Bool32 {
+		if value {
+			return Bool32.True
+		}
+
+		return Bool32.False
+	}
 }
 
 // LONG is signed 32-bit int32_t
