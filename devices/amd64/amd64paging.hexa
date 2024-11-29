@@ -137,9 +137,7 @@ fun resolveAddr(pml4entries ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64
 // TODO should accept usermode flag so shared memory and GDI buffers can be mapped out of user scope
 // ^ probably should be other way for WoW processes
 // TODO mapUserMemory and separate mapEngineMemory
-fun mapMemory(pml4entries ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64, pageCount UInt32, accessibleByUser Bool) {
-	serialPrintln("[paging] mapping memory range")
-
+fun mapMemory(pml4entries ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64, pageCount UInt32, accessibleByUser Bool = false) {
 	let virtualAddrEnd UInt64 = virtualAddr + pageCount * pageSize
 
 	var vAddress UInt64 = virtualAddr
