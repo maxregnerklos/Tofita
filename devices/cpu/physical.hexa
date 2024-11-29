@@ -188,6 +188,8 @@ class PhysicalAllocator {
 	// TODO each process should have some private extra pages (1 megabyte)
 	// ^ means that available_now = (available - 1mb * process_count)
 	static fun allocateSafeUserspaceOnePagePreZeroed() UInt64 {
+		// TODO Hexa: bad inference
+		let engine_reserved_pages UInt64 = engine_reserved_pages
 		if available > engine_reserved_pages {
 			return allocateOnePagePreZeroed()
 		}
