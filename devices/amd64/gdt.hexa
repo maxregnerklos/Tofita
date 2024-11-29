@@ -104,7 +104,8 @@ fun gdtSetEntry(i UInt8, base UInt32, limit UInt64, is64 Bool, typed GdtType) {
 	gdtd.baseHigh = (base >> 24) & 0xFFu8
 
 	gdtd.type =
-		(typed | GdtType.System | GdtType.Present)
+		// TODO Hexa: meta (typed | GdtType.System | GdtType.Present)
+		(typed as! UInt8 | GdtType.System as! UInt8 | GdtType.Present as! UInt8)
 		as! GdtType
 }
 
