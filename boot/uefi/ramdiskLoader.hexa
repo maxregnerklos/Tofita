@@ -29,9 +29,11 @@ fun loadRamDiskFromVolume(
 		sfile.ref,
 		name.utf16() as! ArrayPointer<UInt16>,
 		EFI_OpenMode.EFI_FILE_MODE_READ,
-		EFI_FileAttribute.EFI_FILE_READ_ONLY | // TODO and
-		EFI_FileAttribute.EFI_FILE_HIDDEN | // TODO and
-		EFI_FileAttribute.EFI_FILE_SYSTEM
+		(
+			EFI_FileAttribute.EFI_FILE_READ_ONLY as! UInt64 | // TODO and
+			EFI_FileAttribute.EFI_FILE_HIDDEN as! UInt64 | // TODO and
+			EFI_FileAttribute.EFI_FILE_SYSTEM as! UInt64
+		) as! EFI_FileAttribute
 		// TODO `and not` operator to disable flags
 	)
 
