@@ -56,21 +56,21 @@ let serial_detect_cable = false
 
 // 16550 UART register offsets and bitfields
 // TODO enum
-let r_uart_rxbuf = 0
+let r_uart_rxbuf = 0u8
 let r_uart_txbuf = 0u16
-let r_uart_baud_low = 0
-let r_uart_baud_high = 1
-let r_uart_fcr = 2
-let b_uart_fcr_fifoe = (1 << 0)
-let b_uart_fcr_fifo64 = (1 << 5)
-let r_uart_lcr = 3
-let b_uart_lcr_dlab = (1 << 7)
-let r_uart_mcr = 4
+let r_uart_baud_low = 0u8
+let r_uart_baud_high = 1u8
+let r_uart_fcr = 2u8
+let b_uart_fcr_fifoe UInt8 = (1 << 0u8)
+let b_uart_fcr_fifo64 UInt8 = (1 << 5u8)
+let r_uart_lcr = 3u8
+let b_uart_lcr_dlab = (1 << 7u8)
+let r_uart_mcr = 4u8
 let b_uart_mcr_dtrc = (1 << 0)
 let b_uart_mcr_rts = (1 << 1)
 let r_uart_lsr = 5u16
 let b_uart_lsr_rxrdy = (1 << 0)
-let b_uart_lsr_txrdy = (1 << 5)
+let b_uart_lsr_txrdy UInt8 = (1 << 5u8)
 let b_uart_lsr_temt = (1 << 6)
 let r_uart_msr = 6u16
 let b_uart_msr_cts = (1 << 4)
@@ -97,7 +97,7 @@ declare fun portInb(@volatile port UInt16) UInt8
 @rename('portOutb')
 declare fun portOutb(@volatile port UInt16, @volatile value UInt8) Void
 
-fun readSerialRegister(offset UInt16) {
+fun readSerialRegister(offset UInt16) UInt8 {
 	return portInb(serial_register_base + offset * serial_register_stride)
 }
 
@@ -109,28 +109,28 @@ fun serialPortWritable() Bool {
 	if serial_use_hw_flow_control {
 		if serial_detect_cable {
 			// Wait for both DSR and CTS to be set
-			//   DSR is set if a cable is connected.
-			//   CTS is set if it is ok to transmit data
+			// DSR is set if a cable is connected.
+			// CTS is set if it is ok to transmit data
 			//
-			//   DSR  CTS  Description                               Action
-			//   ===  ===  ========================================  ========
-			//    0    0   No cable connected.                       Wait
-			//    0    1   No cable connected.                       Wait
-			//    1    0   Cable connected, but not clear to send.   Wait
-			//    1    1   Cable connected, and clear to send.       Transmit
+			// DSR  CTS  Description                               Action
+			// ===  ===  ========================================  ========
+			// 0    0   No cable connected.                       Wait
+			// 0    1   No cable connected.                       Wait
+			// 1    0   Cable connected, but not clear to send.   Wait
+			// 1    1   Cable connected, and clear to send.       Transmit
 			return ((readSerialRegister(r_uart_msr) & (b_uart_msr_dsr | b_uart_msr_cts)) ==
-						  (b_uart_msr_dsr | b_uart_msr_cts)) as! Bool
+				(b_uart_msr_dsr | b_uart_msr_cts)) as! Bool
 		} else {
 			// Wait for both DSR and CTS to be set OR for DSR to be clear.
-			//   DSR is set if a cable is connected.
-			//   CTS is set if it is ok to transmit data
+			// DSR is set if a cable is connected.
+			// CTS is set if it is ok to transmit data
 			//
-			//   DSR  CTS  Description                               Action
-			//   ===  ===  ========================================  ========
-			//    0    0   No cable connected.                       Transmit
-			//    0    1   No cable connected.                       Transmit
-			//    1    0   Cable connected, but not clear to send.   Wait
-			//    1    1   Cable connected, and clar to send.        Transmit
+			// DSR  CTS  Description                               Action
+			// ===  ===  ========================================  ========
+			// 0    0   No cable connected.                       Transmit
+			// 0    1   No cable connected.                       Transmit
+			// 1    0   Cable connected, but not clear to send.   Wait
+			// 1    1   Cable connected, and clar to send.        Transmit
 			return ((readSerialRegister(r_uart_msr) & (b_uart_msr_dsr | b_uart_msr_cts)) !=
 						  (b_uart_msr_dsr)) as! Bool
 		}
@@ -157,7 +157,7 @@ fun serialPortWrite(buffer ArrayPointer<UInt8>, sizeOfBuffer UInt64) UInt64 {
 		while (readSerialRegister(r_uart_lsr) & (b_uart_lsr_temt | b_uart_lsr_txrdy)) !=
 			   (b_uart_lsr_temt | b_uart_lsr_txrdy) {}
 
-		while !serialPortWritable() {}
+		while not serialPortWritable() { }
 
 		return 0u64
 	}
@@ -173,13 +173,13 @@ fun serialPortWrite(buffer ArrayPointer<UInt8>, sizeOfBuffer UInt64) UInt64 {
 	while size != 0 {
 		// Wait for the serial port to be ready, to make sure both the transmit FIFO
 		// and shift register empty.
-		while (readSerialRegister(r_uart_lsr) & b_uart_lsr_temt) == 0 {}
+		while (readSerialRegister(r_uart_lsr) & b_uart_lsr_temt) == 0 { }
 
 		// Fill then entire Tx FIFO
 		var index UInt64 = 0u64
 		while index < fifoSize and size != 0 {
 			// Wait for the hardware flow control signal
-			while !serialPortWritable() {}
+			while not serialPortWritable() { }
 
 			// Write byte to the transmit buffer.
 			writeSerialRegister(r_uart_txbuf, buffer[0])
