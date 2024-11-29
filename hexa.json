@@ -28,10 +28,10 @@
 		"engine/gui/quake",
 		"engine/gui/dwm",
 		"engine/gui/dwmState",
-		"engine/gui/session",
-		"engine/gui/taskbar",
 		"engine/gui/desktop",
 		"engine/gui/compositor",
+		"engine/gui/session",
+		"engine/gui/taskbar",
 		"engine/gui/alert",
 		"engine/gui/concepts/files",
 		"engine/gui/concepts/viewer",
@@ -75,8 +75,8 @@
 		"devices/cpu/seh",
 		"devices/cpu/spinlock",
 		"devices/cpu/rwspinlock",
-		"devices/serial/init",
-		"devices/serial/log"
+		"devices/serial/log",
+		"devices/serial/init"
 	],
 	"targets": [
 		{
