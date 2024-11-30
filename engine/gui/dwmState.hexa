@@ -18,25 +18,25 @@
 // Zero for system GUI (like taskbar)
 var firstResponder UInt64 = 0 // Active window to catch keyboard input
 // /
-//var a = 0 /
+// var a = 0 /
 // TODO Hexa
-//enum WindowSizingState : UInt8 {
-//	Normal = 0
-//	Minimized = 1
-//  /// By that button at the right borrom corner
-//	MinimizedByDesktopPeeker = 1
-//}
+// enum WindowSizingState : UInt8 {
+// Normal = 0
+// Minimized = 1
+// /// By that button at the right borrom corner
+// MinimizedByDesktopPeeker = 1
+// }
 
-//let windowsLimit UInt64 = 256
+// let windowsLimit UInt64 = 256
 
 // TODO
-//enum WindowSizingState : UInt8 {
-//	Normal = 0
-//	Minimized = 1
-//  /// By that button at the right borrom corner
-//	MinimizedByDesktopPeeker = 1
-//	Minimized = 1
-//}
+// enum WindowSizingState : UInt8 {
+// Normal = 0
+// Minimized = 1
+// /// By that button at the right borrom corner
+// MinimizedByDesktopPeeker = 1
+// Minimized = 1
+// }
 
 let windowsLimit UInt64 = 256
 

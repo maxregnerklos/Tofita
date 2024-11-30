@@ -77,13 +77,13 @@ fun quakeHandleButtonDown(key UInt8) {
 
 		// TODO `switch` lol + .meta for help
 		if quakeCommand == 'gdt' {
-  			let gdt = gdtTemplate as! ArrayPointer<ByValue<GdtDescriptorEx>>
+			let gdt = gdtTemplate as! ArrayPointer<ByValue<GdtDescriptorEx>>
 			dumpGdtEntries(gdt)
 			quakePrintf("GDT was additionally logged into serial output\n".utf16())
 		} else if quakeCommand == 'reboot' {
-			//quakePrintf("Doing hot reload. Note: this log may be persistent between hot reloads\n".utf16())
-			//var start InitEngine = upper as! InitEngine // TODO `= (InitEngine)` compiles
-			//start(paramsCache) // TODO pml4, stack
+			// quakePrintf("Doing hot reload. Note: this log may be persistent between hot reloads\n".utf16())
+			// var start InitEngine = upper as! InitEngine // TODO `= (InitEngine)` compiles
+			// start(paramsCache) // TODO pml4, stack
 		} else if quakeCommand == 'dark' { // TODO startsWith
 			// Dark theme
 			darkTheme = true
@@ -335,12 +335,12 @@ fun quakePrintf(c ConstArrayPointer<ClangWideChar>, ...args) {
 
 		switch c[i] {
 			case 115: { // ASCII of UTF-8 `s`
-				let string = va_arg_uint64() as! ArrayPointer<UInt8>
-				if string != null {
-					// TODO probeForReadOkay((uint64_t)string, 1)
-					quakePutString(string)
-				} else {
-					quakePrintf("<STRING IS NULL>".utf16())
+					let string = va_arg_uint64() as! ArrayPointer<UInt8>
+					if string != null {
+						// TODO probeForReadOkay((uint64_t)string, 1)
+						quakePutString(string)
+					} else {
+						quakePrintf("<STRING IS NULL>".utf16())
 				}
 			}
 			case 83: { // ASCII of UTF-16 `S`
@@ -387,9 +387,9 @@ fun quakePrintf(c ConstArrayPointer<ClangWideChar>, ...args) {
 				}
 			}
 			case 56: { // `8`
-				var value UInt64 = va_arg_uint64()
-				quakePrintHex(value)
-			}
+					var value UInt64 = va_arg_uint64()
+					quakePrintHex(value)
+				}
 		}
 		i++
 	}

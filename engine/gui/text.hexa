@@ -183,7 +183,7 @@ fun drawAsciiText(text String, x Float, y Int16, color Pixel32) UInt16 {
 		i++
 	}
 
-	return (xx - x)  as! UInt16
+	return (xx - x) as! UInt16
 }
 
 /// Returns advance after last character
@@ -296,17 +296,17 @@ fun drawShadowText(text String, x Float, y Int16, w UInt16, primaryColor Pixel32
 
 	// Primary text
 	drawTextBox(text, x + offset, y, primaryColor, w, 32u16, true, alpha: false)
-//	// TODO `while let char = .charCodeAt(i)`
-//	while text[i] as! UInt16 != 0 and i < 255 * 255 {
-//		var ch UInt8 = text[i] as! UInt8
-//		// TODO charCodeAt return zero? oh wait, `while let` checks for null!
-//
-//		drawAlphaChar(ch, xx + 1, y + 1i16, color)
-//		drawAlphaChar(ch, xx + 1, y + 2i16, color)
-//
-//		drawAlphaChar(ch, xx - 1, y + 1i16, color)
-//		xx += drawAlphaChar(ch, xx - 1, y + 2i16, color)
-//
-//		i++
-//	}
+	// // TODO `while let char = .charCodeAt(i)`
+	// while text[i] as! UInt16 != 0 and i < 255 * 255 {
+	// var ch UInt8 = text[i] as! UInt8
+	// // TODO charCodeAt return zero? oh wait, `while let` checks for null!
+	//
+	// drawAlphaChar(ch, xx + 1, y + 1i16, color)
+	// drawAlphaChar(ch, xx + 1, y + 2i16, color)
+	//
+	// drawAlphaChar(ch, xx - 1, y + 1i16, color)
+	// xx += drawAlphaChar(ch, xx - 1, y + 2i16, color)
+	//
+	// i++
+	// }
 }

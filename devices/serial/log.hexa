@@ -132,7 +132,7 @@ fun serialPortWritable() Bool {
 			// 1    0   Cable connected, but not clear to send.   Wait
 			// 1    1   Cable connected, and clar to send.        Transmit
 			return ((readSerialRegister(r_uart_msr) & (b_uart_msr_dsr | b_uart_msr_cts)) !=
-						  (b_uart_msr_dsr)) as! Bool
+				(b_uart_msr_dsr)) as! Bool
 		}
 	}
 	return true
@@ -293,12 +293,12 @@ fun comItoA(i Int64, b ArrayPointer<UInt8>) {
 	return b
 }
 
-//@rename('va_list') @struct
-//@byValue
-//declare class VA_List {}
-//@rename('va_start')
+// @rename('va_list') @struct
+// @byValue
+// declare class VA_List {}
+// @rename('va_start')
 // TODO firstArgument Any
-//declare fun va_start(lst VA_List, firstArgument String) Void
+// declare fun va_start(lst VA_List, firstArgument String) Void
 @rename('va_start_') @customHeader('
 	#define va_start_(arg) va_list va_list__; va_start(va_list__, arg)
 ')
@@ -354,17 +354,17 @@ fun serialPrintf(c String, ...rest) {
 		switch c[i] { // TODO ClangWideChar
 			// TODO some way to put ascii `case 's': {` // ASCII of UTF-8
 			case 115: { // ASCII of UTF-8 `s`
-				let string = va_arg_uint64() as! ArrayPointer<UInt8> // TODO va_arg<ArrayPointer<UInt8> >(lst)
-				if string != null {
-					// TODO probeForReadOkay((uint64_t)string, 1)
-					// TODO actually should sehReadUInt8 for every char
-					puts(string)
-				} else {
-					serialPrintf("<STRING IS NULL>")
+					let string = va_arg_uint64() as! ArrayPointer<UInt8> // TODO va_arg<ArrayPointer<UInt8> >(lst)
+					if string != null {
+						// TODO probeForReadOkay((uint64_t)string, 1)
+						// TODO actually should sehReadUInt8 for every char
+						puts(string)
+					} else {
+						serialPrintf("<STRING IS NULL>")
 				}
 			}
-			// TODO `break` here converts switch to chain of `if`s, ensure this is correct and document
-			// ^ probably UInt16 is not recognized as switch-able
+				// TODO `break` here converts switch to chain of `if`s, ensure this is correct and document
+				// ^ probably UInt16 is not recognized as switch-able
 			case 83: { // ASCII of UTF-16 `S`
 				var string = va_arg_uint64() as! ArrayPointer<UInt16> // TODO va_arg<ArrayPointer<UInt16> >(lst)
 				var i UInt32 = 0u32

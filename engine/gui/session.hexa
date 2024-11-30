@@ -326,7 +326,7 @@ class GraphicalSession {
 		}
 
 		// Taskbar
-		//taskbarZone.width = 256 TODO Hexa: infer as i16
+		// taskbarZone.width = 256 TODO Hexa: infer as i16
 		taskbarZone.height = 31i16 // TODO 31 lol? related to <= in collider?
 
 		// Start button
@@ -553,7 +553,7 @@ fun hintOfFile(id UInt64) String {
 	let asset = new RamDiskAsset()
 	getRamDiskAsset(asset, shortcut.file)
 
-	if asset.data != null/* TODO , asset.data.length > 0 */ {
+	if asset.data != null /* TODO , asset.data.length > 0 */ {
 		// TODO more + comma separators
 		// TODO folder size 1 depth + `or more` / `and 5 nested folders`
 		return "Size: " + asset.size + " bytes"

@@ -193,7 +193,7 @@ fun tofitaCreateWindowEx(payload CreateWindowExPayload) UInt64 {
 
 @dllExport('tofitaShowWindow')
 fun tofitaShowWindow(windowId UInt64, nCmdShow CmdShow) Void {
-	let payload = new ShowWindowPayload()
+	let payload = ShowWindowPayload()
 	payload.windowId = windowId
 	payload.nCmdShow = nCmdShow
 	tofitaFastSystemCall(TofitaSyscalls.ShowWindow, payload as! Payload)

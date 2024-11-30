@@ -20,7 +20,7 @@ let pic1_command_0x20 = 0x20u16
 let pic1_data = (pic1 + 1)
 let pic2_command = pic2
 let pic2_data = (pic2 + 1)
-let pic_eoi = 0x20u8	  // end-of-interrupt command code
+let pic_eoi = 0x20u8 // end-of-interrupt command code
 let pic_eoi_0x20 = 0x20u8 // end-of-interrupt command code
 
 @rename('vmemcpy')
@@ -221,7 +221,7 @@ class TssEntry {
 	var reserved2 UInt16
 	var ioMapOffset UInt16
 
-	new () {}
+	new () { }
 }
 
 @aligned(64) @volatile var globalGdtr TablePtr = new TablePtr()
@@ -433,7 +433,7 @@ fun setupInterruptsAndExceptions() {
 	serialPrintHex(idt.ref as! UInt64)
 	serialPrint("\n")
 	serialPrintf("[cpu] IDT size is %u of %u elements of %u==16 size\n", cacheIdtr.limit, idt_size,
-				 sizeOf<IdtEntry>())
+		sizeOf<IdtEntry>())
 	// Before you implement the IDT, make sure you have a working GDT
 	remapPic()
 	loadIdt(cacheIdtr)

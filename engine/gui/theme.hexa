@@ -24,13 +24,13 @@ class Theme {
 
 	static var hugeTaskbar = false
 	// TODO ^ recalculate taskbarHeight
-	//static var taskbarHeight = 0
+	// static var taskbarHeight = 0
 
 	static fun recalculate() {
-		//taskbarHeight = hugeTaskbar? 40 : 30
+		// taskbarHeight = hugeTaskbar? 40 : 30
 	}
 
-	new () {}
+	new () { }
 }
 
 var justBlur = false

@@ -72,15 +72,15 @@ fun njraaCallHandled(@volatile process TofitaProcess, syscall TofitaSyscalls) Bo
 			serialPrintln("TofitaSyscalls.SwapWindowFramebuffer window.fbZeta == null")
 		}
 
-		//		if window != null {
-		//			var pixelsEngine = window.fbEngine.pixels
-		//			var pixelsUser = window.fbUser.pixels
-		//			let count = window.fbEngine.width * window.fbEngine.height
-		//			for i in count
-		//			{
-		//				pixelsEngine[i] = pixelsUser[i]
-		//			}
-		//		} TODO dce
+		// if window != null {
+		// var pixelsEngine = window.fbEngine.pixels
+		// var pixelsUser = window.fbUser.pixels
+		// let count = window.fbEngine.width * window.fbEngine.height
+		// for i in count
+		// {
+		// pixelsEngine[i] = pixelsUser[i]
+		// }
+		// } TODO dce
 
 		// frame.raxReturn = 0
 		process.schedulable = true

@@ -91,7 +91,7 @@ fun mapP2Huge(pd ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalA
 }
 
 fun mapPD(pd ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64,
-							writeAllowed UInt8, global Bool) Void {
+	writeAllowed UInt8, global Bool) Void {
 	let view = getPageAddressView(virtualAddr)
 	let pt = referOrCreatePage(pd, view.ref.pd, writeAllowed, global: false)
 	// TODO var pt = referOrCreatePage(pd, getPageAddressView(virtualAddr).ref.pd, writeAllowed)
@@ -99,7 +99,7 @@ fun mapPD(pd ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr 
 }
 
 fun mapPDPT(pdpt ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64,
-							writeAllowed UInt8, global Bool) Void {
+	writeAllowed UInt8, global Bool) Void {
 	let view = getPageAddressView(virtualAddr)
 	var pd = referOrCreatePage(pdpt, view.ref.pdpt, writeAllowed, global: false)
 	// TODO var pd = referOrCreatePage(pdpt, getPageAddressView(virtualAddr).ref.pdpt, writeAllowed)
@@ -107,7 +107,7 @@ fun mapPDPT(pdpt ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalA
 }
 
 fun mapPML4(pml4 ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64,
-							writeAllowed UInt8, global Bool) Void {
+	writeAllowed UInt8, global Bool) Void {
 	let view = getPageAddressView(virtualAddr)
 	let pdpt = referOrCreatePage(pml4, view.ref.pml4, writeAllowed, global: false)
 	mapPDPT(pdpt, virtualAddr, physicalAddr, writeAllowed, global)

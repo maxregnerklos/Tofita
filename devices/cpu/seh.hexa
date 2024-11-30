@@ -99,11 +99,11 @@ fun probeForWriteOkay(@volatile at UInt64, @volatile bytes UInt64) Bool /*{
 	return true
 }*/
 
-//@volatile Bool (*@volatile const probeForWriteOkay)(@volatile at UInt64,
-//												  @volatile bytes UInt64) = _probeForWriteOkay
+// @volatile Bool (*@volatile const probeForWriteOkay)(@volatile at UInt64,
+// @volatile bytes UInt64) = _probeForWriteOkay
 // This is a fascinating way to not allow compiler to optimize return value
-//let probeForReadOkay = _probeForReadOkay
-//let probeForWriteOkay = _probeForWriteOkay
+// let probeForReadOkay = _probeForReadOkay
+// let probeForWriteOkay = _probeForWriteOkay
 
 /// Use this to determine if RIP is within SEH-probing function
 /// This is thread-safe

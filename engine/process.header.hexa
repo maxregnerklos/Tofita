@@ -45,7 +45,7 @@ class TofitaProcess {
 	// When syscall happens, process halted and handled retroactively
 	// in the engine's event loop
 	@volatile var syscallToHandle TofitaSyscalls // = Noop if no actions required
-													  // TODO do this on per-thread basis
+	// TODO do this on per-thread basis
 
 	// TODO separate syscall arguments, cause they differ in 32-bit
 	// TODO syscall *optional* return value? not every syscall does

@@ -70,9 +70,9 @@ fun setWallpaper(bitmap Bitmap32, style WallpaperStyle, preserveAspectRatio Bool
 
 	{
 		serialPrintln("[compositor.setWallpaper] upscale wallpaper to screen size")
-		//let smallestSide Float = bitmap.width > bitmap.height? bitmap.height : bitmap.width
-		//let largestSide Float = _framebuffer.width < _framebuffer.height? _framebuffer.height : _framebuffer.width
-		//var scaler = largestSide / smallestSide
+		// let smallestSide Float = bitmap.width > bitmap.height? bitmap.height : bitmap.width
+		// let largestSide Float = _framebuffer.width < _framebuffer.height? _framebuffer.height : _framebuffer.width
+		// var scaler = largestSide / smallestSide
 
 		var scaler = 1.0
 		var scalerY = 1.0
@@ -103,10 +103,10 @@ fun setWallpaper(bitmap Bitmap32, style WallpaperStyle, preserveAspectRatio Bool
 		let newHeight = (bitmap.height * scaler * 0 + 1088) as! UInt32
 		let newHeight = (bitmap.height * scaler) as! UInt32
 
-		//serialPrintf("%d %d", bitmap.width, bitmap.height)
-		//serialPrintf("%d %d", newWidth, newHeight)
+		// serialPrintf("%d %d", bitmap.width, bitmap.height)
+		// serialPrintf("%d %d", newWidth, newHeight)
 
-		//var upscale Bitmap32 = allocateBitmap(_framebuffer.width, _framebuffer.height)
+		// var upscale Bitmap32 = allocateBitmap(_framebuffer.width, _framebuffer.height)
 		var upscale Bitmap32 = allocateBitmap(newWidth, newHeight)
 
 		// let hReciprocal = 1.0f32 / (_framebuffer.height as! Float32)
@@ -197,7 +197,7 @@ fun setWallpaper(bitmap Bitmap32, style WallpaperStyle, preserveAspectRatio Bool
 	}
 
 	// Upscale blurred wallpaper to the screen shize and apply vibrance effect
-	//............nooo TODO do not upscale if not needed
+	// ............nooo TODO do not upscale if not needed
 	for y in upscale.height as! UInt64 {
 		let preMultipliedY = y * hReciprocal
 
@@ -401,21 +401,21 @@ fun initializeCompositor() {
 	let asset = new RamDiskAsset()
 	getRamDiskAsset(asset, "desktop" + '\r')
 	{
-//		var length = 0
-//		var at = 0u64 // TODO should work with 0u32 too
-//		for i in asset.size {
-//			// TODO `'\n'.charCodeAt(0)`
-//			// if i % 2 == 1 and asset.data[i] == 10 {
-//			if (i % 2 == 0) and (asset.data[i] == 10) {
-//				let offset = (asset.data as! UInt64) + at + 0u64
-//				let file = String.fromUTF16zUpTo(offset as! ConstArrayPointer<UInt16>, length / 2)
-//				at = i + 2u64
-//				length = 0
-//				desktopFilesList.push(file)
-//			} else {
-//				length++
-//			}
-//		}
+		// var length = 0
+		// var at = 0u64 // TODO should work with 0u32 too
+		// for i in asset.size {
+		// // TODO `'\n'.charCodeAt(0)`
+		// // if i % 2 == 1 and asset.data[i] == 10 {
+		// if (i % 2 == 0) and (asset.data[i] == 10) {
+		// let offset = (asset.data as! UInt64) + at + 0u64
+		// let file = String.fromUTF16zUpTo(offset as! ConstArrayPointer<UInt16>, length / 2)
+		// at = i + 2u64
+		// length = 0
+		// desktopFilesList.push(file)
+		// } else {
+		// length++
+		// }
+		// }
 		desktopFilesList = getRamDiskFolder(asset)
 
 		// TODO separate list for Start
@@ -537,10 +537,10 @@ fun initializeCompositor() {
 					shortcut.icon = app48
 					// Name without `.exe` part TODO theme-configurable
 					// displayName = displayName.substr(0, displayName.length - 4)
-					//if let icon = getExeIconFromPath(shortcut.file) {
-					//	// TODO Hexa: `?? app48`
-					//	shortcut.icon = icon
-					//}
+					// if let icon = getExeIconFromPath(shortcut.file) {
+					// // TODO Hexa: `?? app48`
+					// shortcut.icon = icon
+					// }
 					let icon = getExeIconFromPath(shortcut.file)
 					if icon != null {
 						shortcut.icon = icon as! Bitmap32
@@ -687,7 +687,7 @@ fun composite(startupMilliseconds UInt64) {
 	// Startup animation
 	if startupAnimation < 2000 {
 		requestAnimationFrame()
-	 	startupAnimation += 9 * 2u16
+		startupAnimation += 9 * 2u16
 	}
 
 	// TODO non-centered drawBitmap32(wallpaper, 0, 0)
@@ -748,16 +748,16 @@ fun composite(startupMilliseconds UInt64) {
 		drawShadowText(shortcut.displayName, textX, 62i16 + yu, shadowTextWidth, color.ref) // TODO infer i16
 	}
 
-//	color.ref.rgba.ref.a = 64
-//	// TODO move to DWM handleMouseMove etc
-//	if mouseX > 20 and mouseX < (20 + 32) and mouseY > 12 and mouseY < (12 + 60) {
-//		let outlineX = 1i16
-//		let outlineY = 10i16
-//		let outlineW = 76u16
-//		let outlineH = 64u16
-//		drawRectangleWithAlpha(color.ref, outlineX, outlineY, outlineW, outlineH)
-//		drawRectangleOutline(color, outlineX, outlineY, outlineW, outlineH)
-//	}
+	// color.ref.rgba.ref.a = 64
+	// // TODO move to DWM handleMouseMove etc
+	// if mouseX > 20 and mouseX < (20 + 32) and mouseY > 12 and mouseY < (12 + 60) {
+	// let outlineX = 1i16
+	// let outlineY = 10i16
+	// let outlineW = 76u16
+	// let outlineH = 64u16
+	// drawRectangleWithAlpha(color.ref, outlineX, outlineY, outlineW, outlineH)
+	// drawRectangleOutline(color, outlineX, outlineY, outlineW, outlineH)
+	// }
 
 	// Desktop is below everything
 	compositeDesktop(mouseX, mouseY)
@@ -800,10 +800,10 @@ fun composite(startupMilliseconds UInt64) {
 	color.ref.rgba.ref.r = color.ref.rgba.ref.g = color.ref.rgba.ref.b = 0x61u8
 
 	//// TODO move to DWM handleMouseMove etc
-	//if mouseX < 40 and mouseY > (_framebuffer.height - 30) {
-	//	// TODO ^ use bounding rectangles for mouse detection, not imperative code
-	//	drawRectangleWithAlpha(color.ref, 0, taskbarY, 40 + leavesPad + leavesPad, 30)
-	//}
+	// if mouseX < 40 and mouseY > (_framebuffer.height - 30) {
+	// // TODO ^ use bounding rectangles for mouse detection, not imperative code
+	// drawRectangleWithAlpha(color.ref, 0, taskbarY, 40 + leavesPad + leavesPad, 30)
+	// }
 	// Save the color
 	// TODO different color for light theme
 	let hoverColor = color
@@ -836,8 +836,8 @@ fun composite(startupMilliseconds UInt64) {
 	// Taskbar shortcuts (pins)
 	// TODO move to taskbar.hexa
 	// Disable in huge mode cause looks not in style
-	//defaultSession.taskbarPin.enabled = not Theme.hugeTaskbar TODO
-	//defaultSession.taskbarPin.width = Theme.hugeTaskbar? 0i16 : 36i16
+	// defaultSession.taskbarPin.enabled = not Theme.hugeTaskbar TODO
+	// defaultSession.taskbarPin.width = Theme.hugeTaskbar? 0i16 : 36i16
 	if not Theme.hugeTaskbar {
 		// TODO just use specs from collider
 		let shortcutsWidth = 36u16 // 24 is too small
@@ -852,8 +852,8 @@ fun composite(startupMilliseconds UInt64) {
 				shortcutsWidth,
 				taskbarHeight
 			)
-			//rectangle.enabled = not Theme.hugeTaskbar
-			//rectangle.width = Theme.hugeTaskbar? 0i16 : shortcutsWidth as! Int16
+			// rectangle.enabled = not Theme.hugeTaskbar
+			// rectangle.width = Theme.hugeTaskbar? 0i16 : shortcutsWidth as! Int16
 		}
 
 		drawBitmap32WithAlpha(notepad16, shortcutsIconX, taskbarY + 7i16)
@@ -1213,8 +1213,8 @@ fun composite(startupMilliseconds UInt64) {
 				for index in 3 {
 					drawRectangleWithAlpha(
 						color.ref,
-						//x + w - blockWidth - 12i16, TODO
-						//y + userPanelHeight + (pinsPanelHeight / 2i16) + (index * blockWidth * 2i16),
+						// x + w - blockWidth - 12i16, TODO
+						// y + userPanelHeight + (pinsPanelHeight / 2i16) + (index * blockWidth * 2i16),
 						x +
 						w / 2 - blockWidth - blockWidth / 2i16 - index * blockWidth - index * blockWidth / 2i16,
 						panelY + panelHeight / 2 - blockWidth / 2i16,
@@ -1225,8 +1225,8 @@ fun composite(startupMilliseconds UInt64) {
 					// Small shortcut-like element
 					drawRectangleWithAlpha(
 						color.ref,
-						//x + w - blockWidth - 12i16, TODO
-						//y + userPanelHeight + (pinsPanelHeight / 2i16) + (index * blockWidth * 2i16),
+						// x + w - blockWidth - 12i16, TODO
+						// y + userPanelHeight + (pinsPanelHeight / 2i16) + (index * blockWidth * 2i16),
 						x +
 						w / 2 - blockWidth - blockWidth / 2i16 - index * blockWidth - index * blockWidth / 2i16,
 						panelY + panelHeight / 2 - blockWidth / 2i16 + (blockWidth / 4i16) * 3i16,

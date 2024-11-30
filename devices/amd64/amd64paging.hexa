@@ -72,14 +72,14 @@ fun mapPT(pt ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr 
 }
 
 fun mapPD(pd ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64,
-							writeAllowed Bool, accessibleByUser Bool) Void {
+	writeAllowed Bool, accessibleByUser Bool) Void {
 	let view = getPageAddressView(virtualAddr)
 	let pt = referOrCreatePage(pd, view.ref.pd, writeAllowed, accessibleByUser)
 	mapPT(pt, virtualAddr, physicalAddr, writeAllowed, accessibleByUser)
 }
 
 fun mapPDPT(pdpt ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64,
-							writeAllowed Bool, accessibleByUser Bool) Void {
+	writeAllowed Bool, accessibleByUser Bool) Void {
 	let view = getPageAddressView(virtualAddr)
 	let pd = referOrCreatePage(pdpt, view.ref.pdpt, writeAllowed, accessibleByUser)
 	mapPD(pd, virtualAddr, physicalAddr, writeAllowed, accessibleByUser)
@@ -87,7 +87,7 @@ fun mapPDPT(pdpt ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalA
 
 // TODO `private` all those functions
 fun mapPML4(pml4 ArrayPointer<ByValue<PageEntry>>, virtualAddr UInt64, physicalAddr UInt64,
-							writeAllowed Bool, accessibleByUser Bool) Void {
+	writeAllowed Bool, accessibleByUser Bool) Void {
 	let view = getPageAddressView(virtualAddr)
 	let pdpt = referOrCreatePage(pml4, view.ref.pml4, writeAllowed, accessibleByUser)
 	mapPDPT(pdpt, virtualAddr, physicalAddr, writeAllowed, accessibleByUser)
@@ -219,7 +219,7 @@ fun freeCR3(pml4 PageEntry) Void {
 // TODO protection ring
 // TODO lower half limit bounds check (it is less than upper starting range)
 fun mapUserspaceMemory(pml4entries PageEntry, virtualAddr UInt64, physicalAddr UInt64,
-							pageCount UInt32) {
+	pageCount UInt32) {
 	// TODO
 }
 

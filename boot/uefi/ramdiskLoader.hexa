@@ -72,7 +72,7 @@ fun loadRamDiskFromVolume(
 	var address ArrayByValue<UInt64, 1> = [0]
 	let status = uefiAllocate(bootsvc, sizeAlloc.ref, address.ref)
 	serialPrintf("[[[uefi.loadRamDiskFromVolume]]] status: uefiAllocate %d, size %d at %d\n", status,
-				 size[0], address)
+		size[0], address)
 
 	if status != EFI_STATUS.EFI_SUCCESS {
 		return status
@@ -133,7 +133,7 @@ fun findAndLoadRamDisk(bootsvc EFI_BOOT_SERVICES, ramdisk RamDisk) EFI_STATUS {
 		serialPrintf("[[[uefi.findAndLoadRamDisk]]] <ERROR> failed LocateHandleBuffer %d\n", status)
 	} else {
 		serialPrintf("[[[uefi.findAndLoadRamDisk]]] success LocateHandleBuffer, got %d handles\n",
-					 handleCount)
+			handleCount)
 	}
 
 	for i in handleCount {
@@ -165,9 +165,9 @@ fun findAndLoadRamDisk(bootsvc EFI_BOOT_SERVICES, ramdisk RamDisk) EFI_STATUS {
 		var root = rootStorage[0] as! EFI_FILE_PROTOCOL
 		if status != EFI_STATUS.EFI_SUCCESS {
 			serialPrintf("[[[uefi.findAndLoadRamDisk]]] failed OpenVolume with status %d, continue to "
-						 +
-						 "the next one\n",
-						 status)
+				+
+				"the next one\n",
+				status)
 			continue
 		}
 

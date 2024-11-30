@@ -162,7 +162,7 @@ class Files {
 
 		// Cleanup
 		color.ref.color = 0x33333333u32
-		drawRectangle(color, 0, 0,window.width, window.height)
+		drawRectangle(color, 0, 0, window.width, window.height)
 
 		// TODO light theme
 		color.ref.rgba.ref.r = color.ref.rgba.ref.g = color.ref.rgba.ref.b = 0xFFu8
@@ -213,10 +213,10 @@ class Files {
 	}
 
 	static fun hintOfFile(id UInt64) String {
-		//let key = "HKCR\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\Instance\{" + id.toString() + "}\TaskbarInfo"
-		//let taskbarInfo = readRegistryKey(key)
+		// let key = "HKCR\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\Instance\{" + id.toString() + "}\TaskbarInfo"
+		// let taskbarInfo = readRegistryKey(key)
 		// TODO Hexa: if taskbarInfo.isNull { return "" }
-		//return String.fromWideString(taskbarInfo.ref.data)
+		// return String.fromWideString(taskbarInfo.ref.data)
 		return ''
 	}
 
@@ -234,10 +234,10 @@ class Files {
 				shortcut.icon = app48
 				// Name without `.exe` part TODO theme-configurable
 				// displayName = displayName.substr(0, displayName.length - 4)
-				//if let icon = getExeIconFromPath(shortcut.file) {
-				//	// TODO Hexa: `?? app48`
-				//	shortcut.icon = icon
-				//}
+				// if let icon = getExeIconFromPath(shortcut.file) {
+				// // TODO Hexa: `?? app48`
+				// shortcut.icon = icon
+				// }
 				let icon = getExeIconFromPath(shortcut.file)
 				if icon != null {
 					shortcut.icon = icon as! Bitmap32

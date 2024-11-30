@@ -68,11 +68,11 @@ class ColliderRectangle {
 
 	var state ColliderState = ColliderState.Default // TODO
 	// TODO:
-	//var onMove (id UInt64) => Void
+	// var onMove (id UInt64) => Void
 	// or better some handler class with id internally or something
-	//var onStartDrag (id UInt64) => Void
-	//var onLeftDown (id UInt64) => Void
-	//var onLeftUp (id UInt64) => Void
+	// var onStartDrag (id UInt64) => Void
+	// var onLeftDown (id UInt64) => Void
+	// var onLeftUp (id UInt64) => Void
 	// TODO `@capture(closure: true)`
 	var handler (id UInt64, event ColliderEventType) => Void // TODO `let`
 
@@ -146,12 +146,12 @@ class ColliderRectangle {
 
 	// TODO Concept
 	// fun collidesWithBox(relX Int16, relY Int16, w Int16, h Int16) {
-	// 	return
-	// 		relX >= relativeX and
-	// 		relY >= relativeY and
-	// 		relX <= (relativeX + width) and
-	// 		relY <= (relativeY + height) and
-	// 		enabled
+	// return
+	// relX >= relativeX and
+	// relY >= relativeY and
+	// relX <= (relativeX + width) and
+	// relY <= (relativeY + height) and
+	// enabled
 	// }
 
 	static fun rectanglesIntersect(

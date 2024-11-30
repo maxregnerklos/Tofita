@@ -69,7 +69,7 @@ fun mapEfiRuntime(memoryMap UefiMemoryMap) {
 
 @struct class Buffa {
 	let value UInt64 = 0
-	new () {}
+	new () { }
 }
 let buffaStorage = new Buffa()
 let buffa = buffaStorage as! ArrayPointer<UInt8>

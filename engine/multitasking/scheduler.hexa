@@ -56,7 +56,7 @@ var taskBarRedraw UInt8 = 0 // Re-paint task bar current time
 
 fun getNextProcess() UInt64 {
 	// Note that idle process is ignored
-	for index in 1...processes.length {
+	for index in 1 ... processes.length {
 		let process = processes[index]
 		if process != null, process.present == true, process.syscallToHandle == TofitaSyscalls.Noop {
 			if process.schedulable == true {

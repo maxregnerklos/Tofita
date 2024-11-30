@@ -17,7 +17,7 @@
 class Desktop {
 	var trashCanHover Bool = false
 
-	new () {}
+	new () { }
 
 	fun handleEvent(id UInt64, event ColliderEventType) {
 		if id == 1 {
@@ -32,7 +32,7 @@ class Shortcut {
 	var icon Bitmap32
 	var rectangle ColliderRectangle
 	var link Bool = false
-	new () {}
+	new () { }
 }
 
 var dragX = 255i16

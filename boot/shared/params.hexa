@@ -29,7 +29,7 @@ let pageSize UInt16 = 4096u16 // 4 KiB
 
 // Helpers
 @struct
-//@sizeOf(8)
+// TODO @sizeOf(8)
 // TODO separate UserVirtual
 class Virtual<T> {
 
@@ -74,7 +74,7 @@ class UefiMemoryMap {
 	var mapKey UInt64
 	var descriptorSize UInt64
 	var descriptorVersion UInt32
-	new () {}
+	new () { }
 }
 
 @struct
@@ -91,7 +91,7 @@ class FrameBuffer {
 	var width UInt32
 	var height UInt32
 	var pixelsPerScanLine UInt32
-	new () {}
+	new () { }
 }
 
 @struct
@@ -103,7 +103,7 @@ class RamDisk {
 	var physical UInt64
 	/// Bytes for mapping
 	var size UInt64
-	new () {}
+	new () { }
 }
 
 @struct

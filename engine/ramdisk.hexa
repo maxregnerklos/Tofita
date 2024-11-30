@@ -37,7 +37,7 @@ fun setRamDisk(@readonly ramdisk RamDisk) {
 class RamDiskAsset {
 	var size UInt32
 	var data ArrayPointer<UInt8>
-	new () {}
+	new () { }
 }
 
 fun getRamDiskAsset(asset RamDiskAsset, pathToAsset String) {

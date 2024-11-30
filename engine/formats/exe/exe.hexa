@@ -153,9 +153,9 @@ class ExeLoader<SIZE, HEADER> {
 		// TODO copy PE headers?
 		for i in peHeader.numberOfSections {
 			serialPrintf("[loadDLL] Copy section [%d] named '%s' of size %d at %u\n", i,
-						imageSectionHeader[i].ref.name.ref,
-						imageSectionHeader[i].ref.sizeOfRawData,
-						imageSectionHeader[i].ref.virtualAddress)
+				imageSectionHeader[i].ref.name.ref,
+				imageSectionHeader[i].ref.sizeOfRawData,
+				imageSectionHeader[i].ref.virtualAddress)
 			var where UInt64 = (buffer as! UInt64) + imageSectionHeader[i].ref.virtualAddress
 
 			tmemcpy(where as! ArrayPointer<UInt8>,
@@ -194,31 +194,31 @@ class ExeLoader<SIZE, HEADER> {
 					var offset UInt64 = relInfo[0] & 0xfff
 
 					switch type as! ImageRelocationType {
-					case IMAGE_REL_BASED_ABSOLUTE:
-						// Skip relocation
-						// TODO `break` will not work here?
+						case IMAGE_REL_BASED_ABSOLUTE:
+							// Skip relocation
+							// TODO `break` will not work here?
 
-					case IMAGE_REL_BASED_HIGHLOW:
-						// Change complete 32 bit address
-						{
-							var patchAddrHL ArrayPointer<UInt32> = (dest + offset) as! ArrayPointer<UInt32>
-							patchAddrHL[0] += delta as! UInt32
-						}
-						// break
+						case IMAGE_REL_BASED_HIGHLOW:
+							// Change complete 32 bit address
+							{
+								var patchAddrHL ArrayPointer<UInt32> = (dest + offset) as! ArrayPointer<UInt32>
+								patchAddrHL[0] += delta as! UInt32
+							}
+							// break
 
-						// TODO `#ifdef _WIN64`
-					case IMAGE_REL_BASED_DIR64: {
-						// TODO should be no-op on 32 bit
-						var patchAddr64 = (dest + offset) as! ArrayPointer<Int64>
-						patchAddr64[0] += delta as! Int64
-					}
-						// break
-						// TODO `#endif`
+							// TODO `#ifdef _WIN64`
+						case IMAGE_REL_BASED_DIR64: {
+								// TODO should be no-op on 32 bit
+								var patchAddr64 = (dest + offset) as! ArrayPointer<Int64>
+								patchAddr64[0] += delta as! Int64
+							}
+							// break
+							// TODO `#endif`
 
-					case _:
-						// TODO loader should fail
-						serialPrintf("[loadDLL] Unknown relocation: %d\n", type)
-						//break
+						case _:
+							// TODO loader should fail
+							serialPrintf("[loadDLL] Unknown relocation: %d\n", type)
+							// break
 					}
 
 					// Next step
@@ -249,7 +249,6 @@ class ExeLoader<SIZE, HEADER> {
 
 				var exports = ((buffer as! UInt64) + (directory.virtualAddress as! UInt64)) as! IMAGE_EXPORT_DIRECTORY
 
-				//var i UInt32 = 0
 				var nameRef ArrayPointer<UInt32> = (codeBase + (exports.addressOfNames as! UInt64)) as! ArrayPointer<UInt32>
 				var ordinal ArrayPointer<UInt16> = (codeBase + (exports.addressOfNameOrdinals as! UInt64)) as! ArrayPointer<UInt16>
 				var entry UInt32 = 0
@@ -504,8 +503,8 @@ class ExeLoader<SIZE, HEADER> {
 		let dllEntries = physical as! ArrayPointer<SIZE>
 
 		// TODO `if count[0] >= 511 {`
-		//let amount = count[0] as! SIZE
-		//if amount >= (511 as! SIZE) {
+		// let amount = count[0] as! SIZE
+		// if amount >= (511 as! SIZE) {
 		if startup.dllCount >= 511 {
 			// TODO error > GUI alert DLL entry not found
 			return
@@ -616,8 +615,8 @@ class ExeLoader<SIZE, HEADER> {
 		process.frame.ip = ntdll.entry // Contains crt0
 		process.frame.sp = app.stackVirtual
 		process.frame.rcxArg0 = whereStartup // First argument
-		//process.frame.rcxArg0 = app.pei.entry // First argument
-		//process.frame.r8 = whereEntries // Third argument
+		// process.frame.rcxArg0 = app.pei.entry // First argument
+		// process.frame.r8 = whereEntries // Third argument
 		// TODO merge all to one argument (single structure)
 		// TODO unMap zero page to cause NPE
 	}

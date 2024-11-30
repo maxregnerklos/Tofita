@@ -56,5 +56,5 @@ class OverlappedWindow {
 	var fbZetaUserAddress UInt64
 	var fbGamaUserAddress UInt64
 
-	new () {}
+	new () { }
 }

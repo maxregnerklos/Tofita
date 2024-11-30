@@ -17,9 +17,9 @@
 
 fun initSerial() UInt8 {
 	// Calculate divisor for baud generator
-	//    Ref_Clk_Rate / Baud_Rate / 16
 	var divisor UInt32 = serial_clock_rate / (serial_baud_rate * 16u32)
 	if (serial_clock_rate % (serial_baud_rate * 16)) >= serial_baud_rate * 8 {
+	// Ref_Clk_Rate / Baud_Rate / 16
 		divisor++
 	}
 	// See if the serial port is already initialized

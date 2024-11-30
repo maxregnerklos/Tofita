@@ -14,7 +14,7 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 class ExeResourceLoader<SIZE, HEADER> {
-	new() {}
+	new () { }
 
 	/*fun virtualToSection(virtualAddress) {
 		let imageSectionHeader = 0
@@ -37,15 +37,15 @@ class ExeResourceLoader<SIZE, HEADER> {
 	fun getIcon(asset RamDiskAsset) Bitmap32? {
 		var ptr = asset.data as! ArrayPointer<UInt8>
 		var peHeader = ((ptr as! UInt64) + ptr[0x3C] + ptr[0x3C + 1] * 256) as! PeHeader
-		//serialPrintf("[ExeResourceLoader] PE header signature 'PE' == '%s'\n", peHeader)
+		// serialPrintf("[ExeResourceLoader] PE header signature 'PE' == '%s'\n", peHeader)
 		var peOptionalHeader = ((peHeader as! UInt64) + sizeOf<PeHeader>()) as! HEADER
 		//serialPrintf("[ExeResourceLoader] PE32(+) optional header signature 0x020B == %d == %d\n", peOptionalHeader.magic,
 		//			0x020B)
 		// TODO require all .dlls ARCH be the same or show loader error
-		//serialPrintf("[ExeResourceLoader] PE32(+) size of image == %d\n", peOptionalHeader.sizeOfImage)
+		// serialPrintf("[ExeResourceLoader] PE32(+) size of image == %d\n", peOptionalHeader.sizeOfImage)
 
-		//let pages = down_bytes_to_pages(peOptionalHeader.sizeOfImage) + 1u32
-		//let physical = PhysicalAllocator.allocatePages(pages)
+		// let pages = down_bytes_to_pages(peOptionalHeader.sizeOfImage) + 1u32
+		// let physical = PhysicalAllocator.allocatePages(pages)
 
 		// Copy sections
 		var imageSectionHeader =
@@ -75,11 +75,11 @@ class ExeResourceLoader<SIZE, HEADER> {
 			let rt_icon = 3
 
 			if isRSRC {
-				//serialPrintf("[ExeResourceLoader] Parsing .rsrc...\n")
+				// serialPrintf("[ExeResourceLoader] Parsing .rsrc...\n")
 				let section = imageSectionHeader[i].ref
 				let dir = ((ptr as! UInt64) + section.pointerToRawData) as! IMAGE_RESOURCE_DIRECTORY
-         		// TODO Named
-				//serialPrintf("[ExeResourceLoader] ID Entries: %d\n", dir.numberOfIdEntries)
+				// TODO Named
+				// serialPrintf("[ExeResourceLoader] ID Entries: %d\n", dir.numberOfIdEntries)
 
 				var bestIcon = 0
 				var foundIcon = false
@@ -90,7 +90,7 @@ class ExeResourceLoader<SIZE, HEADER> {
 					let entry = dir.directoryEntries[id].ref
 
 					if entry.unionName.ref.id == rt_group_icon {
-						//serialPrintf("[ExeResourceLoader] Found RT_GROUP_ICON at %d offset %8\n", id as! Int, entry.unionOffset.ref.offsetToData as! UInt64)
+						// serialPrintf("[ExeResourceLoader] Found RT_GROUP_ICON at %d offset %8\n", id as! Int, entry.unionOffset.ref.offsetToData as! UInt64)
 					} else {
 						continue
 					}
@@ -115,19 +115,19 @@ class ExeResourceLoader<SIZE, HEADER> {
 							let rva UInt64 = section.pointerToRawData + (dataEntry.offsetToData - section.virtualAddress)
 							let offset = (ptr as! UInt64) + rva
 							let iconDir = offset as! GRPICONDIR
-							//serialPrintf("[ExeResourceLoader] GRPICONDIR count %d\n", iconDir.idCount)
+							// serialPrintf("[ExeResourceLoader] GRPICONDIR count %d\n", iconDir.idCount)
 
 							for index in iconDir.idCount {
 								let iconEntry = iconDir.idEntries[index].ref
-								//serialPrintf("[ExeResourceLoader] GRPICONDIR width %d id %d color %d bit %d\n", iconEntry.bWidth, iconEntry.nID, iconEntry.bColorCount, iconEntry.wBitCount)
+								// serialPrintf("[ExeResourceLoader] GRPICONDIR width %d id %d color %d bit %d\n", iconEntry.bWidth, iconEntry.nID, iconEntry.bColorCount, iconEntry.wBitCount)
 								// TODO size selection
-								//let goal = 48
+								// let goal = 48
 								// TODO `iconEntry.bColorCount == 0,`?
-								if iconEntry.bWidth == 48, iconEntry.bHeight == iconEntry.bWidth,  iconEntry.wBitCount == 32 {
+								if iconEntry.bWidth == 48, iconEntry.bHeight == iconEntry.bWidth, iconEntry.wBitCount == 32 {
 									bestIcon = iconEntry.nID
 									foundIcon = true
 									imageSize = iconEntry.dwBytesInRes
-									//serialPrintf("[ExeResourceLoader] Best icon is %d\n", bestIcon)
+									// serialPrintf("[ExeResourceLoader] Best icon is %d\n", bestIcon)
 								}
 							}
 						}
@@ -139,7 +139,7 @@ class ExeResourceLoader<SIZE, HEADER> {
 					let entry = dir.directoryEntries[id].ref
 
 					if entry.unionName.ref.id == rt_icon, foundIcon {
-						//serialPrintf("[ExeResourceLoader] Found RT_ICON at %d offset %8\n", id as! Int, entry.unionOffset.ref.offsetToData as! UInt64)
+						// serialPrintf("[ExeResourceLoader] Found RT_ICON at %d offset %8\n", id as! Int, entry.unionOffset.ref.offsetToData as! UInt64)
 					} else {
 						continue
 					}
@@ -164,9 +164,9 @@ class ExeResourceLoader<SIZE, HEADER> {
 							let rva UInt64 = section.pointerToRawData + (dataEntry.offsetToData - section.virtualAddress)
 							let offset = (ptr as! UInt64) + rva
 
-							//serialPrintf("[ExeResourceLoader] Best is %d current is %d\n", bestIcon as! UInt32, id as! UInt32)
+							// serialPrintf("[ExeResourceLoader] Best is %d current is %d\n", bestIcon as! UInt32, id as! UInt32)
 							if bestIcon == byNameEntry.unionName.ref.id {
-								//serialPrintf("[ExeResourceLoader] Found icon %d\n", bestIcon)
+								// serialPrintf("[ExeResourceLoader] Found icon %d\n", bestIcon)
 								let icon = offset
 								// TODO Hexa: `let bmp = return whatever`
 								return loadIconPayload(icon as! ConstArrayPointer<UInt8>, 48, 48, imageSize, 0)

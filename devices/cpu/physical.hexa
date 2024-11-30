@@ -52,9 +52,9 @@ class PhysicalAllocator {
 	// TODO those fields must have ` = default`
 
 	// TODO does make sense at all?
-	//static fun virtualToPhysical(virtual UInt64) UInt64 {
-	//	return 0
-	//}
+	// static fun virtualToPhysical(virtual UInt64) UInt64 {
+	// return 0
+	// }
 
 	static fun physicalToVirtual(physical UInt64) UInt64 {
 		return physical + wholePhysicalStart
@@ -109,7 +109,7 @@ class PhysicalAllocator {
 		{
 			var physical UInt64 = params.physicalBuffer
 			serialPrintf("[physical] Reserve %u bytes at %u of bootloader buffer\n", params.physicalBytes,
-						 physical)
+				physical)
 			var i UInt64 = down_bytes_to_pages(params.physicalBytes) + 1u64
 			while i > 0 {
 				i--
@@ -218,16 +218,16 @@ class PhysicalAllocator {
 			// TODO probably UInt32 is completely enough to represent pages
 			while i < steps {
 				// if buffer[i] != PAGE_FREE {
-				//	if current > largest {
-				//		largest = current
-				//		largestAt = currentAt
-				//		if largest >= pages { break }
-				//	}
-				//	current = 0
-				//} else {
-				//	if current == 0 { currentAt = i }
-				//	current++
-				//}
+				// if current > largest {
+				// largest = current
+				// largestAt = currentAt
+				// if largest >= pages { break }
+				// }
+				// current = 0
+				// } else {
+				// if current == 0 { currentAt = i }
+				// current++
+				// }
 
 				if buffer[i] == page_free {
 					if current == 0u64 {

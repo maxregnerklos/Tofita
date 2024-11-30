@@ -406,7 +406,7 @@ fun handleMouseDown(type MouseActionType, mouseX Int16, mouseY Int16) {
 	if type == MouseActionType.LeftDown and frameHoverState != FrameHover.Noop {
 		frameHoverWindowDown = true
 		frameHoverWindowInsideButtonArea = true
- 		// TODO Hexa: fun as st useless error `requestAnimationFrame` note lack of `()`
+		// TODO Hexa: fun as st useless error `requestAnimationFrame` note lack of `()`
 		requestAnimationFrame()
 
 		return
@@ -510,7 +510,7 @@ fun handleMouseActivity() {
 	}
 
 	// Swap buffers
-	mouseActionsUseZeta = !mouseActionsUseZeta
+	mouseActionsUseZeta = not mouseActionsUseZeta
 
 	@volatile let mouseActions [MouseAction] = (!mouseActionsUseZeta) ? mouseActionsZeta : mouseActionsGama
 
