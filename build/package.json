@@ -1,0 +1,31 @@
+{
+  "name": "ui-recode",
+  "version": "1.0.0",
+  "description": "A utility to recode UI files for a Windows 11-based theme",
+  "main": "ui-recode.js",
+  "scripts": {
+    "start": "node ui-recode.js --path ./example/file.json --theme Windows11",
+    "lint": "eslint .",
+    "test": "mocha tests",
+    "validate": "node tools/ui-validator.js --path ./assets/ui"
+  },
+  "keywords": [
+    "ui",
+    "recode",
+    "windows11",
+    "theme",
+    "automation"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0" // Optional for better console output
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "mocha": "^10.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
