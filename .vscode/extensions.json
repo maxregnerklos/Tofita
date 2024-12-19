@@ -1,53 +1,28 @@
-echo "Starting recode process for all UI files..."
-
-# Path to your directory containing the UI files
-$rootDir = "D:\a\Tofita\Tofita"
-
-# Get all JSON and HEXA files recursively from the specified directory
-$files = Get-ChildItem -Path $rootDir -Recurse | Where-Object { $_.Extension -eq ".json" -or $_.Extension -eq ".hexa" }
-
-if ($files.Count -eq 0) {
-    Write-Host "No valid UI files found for recoding."
-    exit 0
+{
+  "recodingProcess": {
+    "startMessage": "Starting recode process for all UI files...",
+    "supportedFileTypes": [".json", ".hexa"],
+    "ignoreFileTypes": [".js", ".txt", ".html"],
+    "uiFiles": {
+      "extensionsJson": {
+        "filePath": "D:\\a\\Tofita\\Tofita\\.vscode\\extensions.json",
+        "recommendations": [
+          "ms-python.python",
+          "esbenp.prettier-vscode"
+        ],
+        "unwantedRecommendations": [
+          "somepublisher.someextension"
+        ]
+      }
+    },
+    "recodeScripts": {
+      "uiRecodeScript": "node D:\\a\\Tofita\\Tofita\\ui-recode.js",
+      "theme": "Windows11"
+    },
+    "errorHandling": {
+      "fileNotFoundMessage": "File not found: {filePath}",
+      "recodeFailedMessage": "Recode failed for file {filePath}"
+    },
+    "endMessage": "Recoding process completed successfully."
+  }
 }
-
-# Loop through all found files and process them
-foreach ($file in $files) {
-    try {
-        Write-Host "Recoding file: $($file.FullName)"
-
-        # Ensure node and ui-recode.js are correctly invoked
-        if (Test-Path "$($file.FullName)") {
-            # Check for the extensions.json file specifically
-            if ($file.Name -eq "extensions.json") {
-                Write-Host "Found extensions.json, ensuring valid format..."
-                $content = Get-Content $file.FullName | Out-String
-                $json = $content | ConvertFrom-Json
-
-                # Perform validation and possible modifications here
-                # For example, you could add or update recommendations
-                if ($json.recommendations -notcontains "ms-python.python") {
-                    $json.recommendations += "ms-python.python"
-                }
-
-                # Write back the updated content to the file
-                $json | ConvertTo-Json -Depth 10 | Set-Content $file.FullName
-                Write-Host "extensions.json recoded successfully."
-            }
-            else {
-                # Proceed with normal recoding for other JSON or HEXA files
-                $command = "node D:\a\Tofita\Tofita\ui-recode.js --path `"$($file.FullName)`" --theme Windows11"
-                Write-Host "Executing: $command"
-                Invoke-Expression $command
-            }
-        } else {
-            Write-Host "File not found: $($file.FullName)"
-            throw "File not found: $($file.FullName)"
-        }
-    } catch {
-        Write-Host "Error processing file $($file.FullName): $_"
-        throw "Recode failed for file $($file.FullName)"
-    }
-}
-
-Write-Host "Recoding process completed successfully."
