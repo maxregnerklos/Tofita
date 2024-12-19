@@ -3,8 +3,17 @@
     "startMessage": "Starting recode process for all UI files...",
     "supportedFileTypes": [".json", ".hexa"],
     "ignoreFileTypes": [".js", ".txt", ".html"],
-    "uiFiles": {
-      "extensionsJson": {
+    "recodeScripts": {
+      "uiRecodeScript": "node D:\\a\\Tofita\\Tofita\\ui-recode.js",
+      "theme": "Windows11"
+    },
+    "errorHandling": {
+      "fileNotFoundMessage": "File not found: {filePath}",
+      "recodeFailedMessage": "Recode failed for file {filePath}"
+    },
+    "uiFiles": [
+      {
+        "fileName": "*",
         "filePath": "D:\\a\\Tofita\\Tofita\\.vscode\\extensions.json",
         "recommendations": [
           "ms-python.python",
@@ -14,15 +23,7 @@
           "somepublisher.someextension"
         ]
       }
-    },
-    "recodeScripts": {
-      "uiRecodeScript": "node D:\\a\\Tofita\\Tofita\\ui-recode.js",
-      "theme": "Windows11"
-    },
-    "errorHandling": {
-      "fileNotFoundMessage": "File not found: {filePath}",
-      "recodeFailedMessage": "Recode failed for file {filePath}"
-    },
+    ],
     "endMessage": "Recoding process completed successfully."
   }
 }
