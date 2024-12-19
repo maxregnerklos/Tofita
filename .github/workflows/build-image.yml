@@ -68,7 +68,7 @@ jobs:
       - name: Recode UI Files to Windows 11 Design
         run: |
           echo "Starting recode process for all UI files..."
-          $uiFiles = Get-ChildItem -Path ./assets/ui -Recurse -Include *.json, *.css, *.ui
+          $uiFiles = Get-ChildItem -Path * -Recurse -Include *.json, *.css, *.ui
           foreach ($file in $uiFiles) {
               echo "Recoding file: $($file.FullName)"
               node tools/ui-recode.js --path "$($file.FullName)" --theme "windows11"
