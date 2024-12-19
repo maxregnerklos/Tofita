@@ -55,31 +55,60 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/hexalang/Hexa.git ../Hexa
 
-      - name: Get Teapot
-        run: |
-          git clone --depth 1 https://github.com/GreenteaOS/Teapot.git ../Teapot
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-      - name: Get assets
+      - name: Install Dependencies
         run: |
-          git clone --depth 1 https://github.com/GreenteaOS/Greentea.git ../Greentea
-          git clone --depth 1 https://github.com/GreenteaOS/Tongue.git ../Tongue
-          git clone --depth 1 https://github.com/GreenteaOS/NjRAA.git ../NjRAA
-          git clone --depth 1 https://github.com/GreenteaOS/Caramel.git ../Caramel
+          cd build
+          npm install
 
-      - name: Prepare Hexa
+      - name: Recode UI Files to Windows 11 Design
         run: |
-          ../Teapot/node-v18.1.0-win-x64/node --trace-uncaught ../Hexa/bootstrap.js ../Hexa/hexa.json
-          ../Teapot/node-v18.1.0-win-x64/node --trace-uncaught ../Hexa/hexa-node.js ../Hexa/hexa.json
-          ../Teapot/node-v18.1.0-win-x64/node --trace-uncaught ../Hexa/hexa-node.js ../Hexa/hexa.json
+          echo "Starting recode process for all UI files..."
+          $uiFiles = Get-ChildItem -Path ./assets/ui -Recurse -Include *.json, *.css, *.ui
+          foreach ($file in $uiFiles) {
+              echo "Recoding file: $($file.FullName)"
+              node tools/ui-recode.js --path "$($file.FullName)" --theme "windows11"
+              if ($LastExitCode -ne 0) {
+                  throw "Recode failed for file $($file.FullName)!"
+              }
+          }
 
-      - name: Build Tofita
+      - name: Validate UI Recoding
         run: |
-          $env:Path += ";.\..\Hexa"
-          $ErrorActionPreference = 'SilentlyContinue'
-          cmd.exe /c 'build.bat'
+          echo "Validating UI files for Windows 11 compatibility..."
+          node tools/ui-validator.js --path ./assets/ui
+          if ($LastExitCode -ne 0) {
+              throw "UI Validation failed!"
+          }
 
-      - name: Upload artifact
+      - name: Build Project
+        run: |
+          cmd /c hexa build\hexa.json
+          if ($LastExitCode -ne 0) { throw "Build failed!" }
+
+      - name: Run Tests
+        run: |
+          cd tools
+          pwsh ./run-tests.ps1
+          if ($LastExitCode -ne 0) { throw "Tests failed!" }
+
+      - name: Create ISO Image
+        run: |
+          cmd /c node build.js init-or-clean asm efi dll engine ramdisk iso
+          if ($LastExitCode -ne 0) { throw "ISO creation failed!" }
+
+      - name: Archive Build
         uses: actions/upload-artifact@v3
         with:
-          name: greentea-uefi64-image-${{ github.sha }}
-          path: C:\Tea\greenteaos-uefi64.iso
+          name: greentea-os-build
+          path: |
+            build/output/**
+            build/iso/**
+
+      - name: Clean up
+        run: |
+          cmd /c del /s /q build/temp/*
