@@ -71,7 +71,7 @@ jobs:
           $uiFiles = Get-ChildItem -Path * -Recurse -Include *.json, *.css, *.ui
           foreach ($file in $uiFiles) {
               echo "Recoding file: $($file.FullName)"
-              node tools/ui-recode.js --path "$($file.FullName)" --theme "windows11"
+              node tools/ui-recode.js --path * --theme "windows11"
               if ($LastExitCode -ne 0) {
                   throw "Recode failed for file $($file.FullName)!"
               }
